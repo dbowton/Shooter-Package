@@ -16,6 +16,8 @@ public abstract class Character : MonoBehaviour
 
     public virtual void update(float dt) {}
 
+    public virtual void Hit() { }
+
     public virtual void Die()
     {
         die = true;

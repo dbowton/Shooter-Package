@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] protected float maxHealth = 40;
     [SerializeField] protected float currentHealth = 40;
+    [SerializeField] protected float maxHealth = 40;
 
     [SerializeField] protected AudioSource hurtSound;
     [SerializeField] protected AudioSource deathSound;
@@ -47,6 +47,8 @@ public class Health : MonoBehaviour
 
     public void Damage(Damage damage, float dmgMulti = 1)
     {
+        if(gameObject.transform.root.TryGetComponent<Character>(out Character character)) character.Hit();
+
         damage.damage *= dmgMulti;
 
         if(damage.duration == 0)
