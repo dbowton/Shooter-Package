@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class GameManager : Singleton<GameManager>
 {
+    public float gameTime = 0f;
+
     public enum State
     {
         TITLE,
@@ -22,7 +24,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject tradeScreenPrefab;
     [SerializeField] private GameObject inventoryScreenPrefab;
 
-    private PlayerManager player;
+    public PlayerManager player;
     private TradeManager tradeManager;
     private InventoryManager inventoryMangager;
 
@@ -181,7 +183,7 @@ public class GameManager : Singleton<GameManager>
     {
         GameState = State.TRADE;
         tradeManager = Instantiate(tradeScreenPrefab).GetComponent<TradeManager>();
-        tradeManager.SetUp(ref testplayer, ref container);
+//        tradeManager.SetUp(ref testplayer, ref container);
     }
 
     public void OnInventoryReturn(InputAction.CallbackContext callbackContext)

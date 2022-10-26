@@ -8,31 +8,31 @@ public class SimpleMovement : MonoBehaviour
     float horizontalRotation = 50f;
     float verticalRotation = 12f;
 
-    void Update()
+    public void update(float dt)
     {
         if(Input.GetKey(KeyCode.UpArrow))
-            transform.localEulerAngles -= Vector3.right * verticalRotation * Time.deltaTime;
+            transform.localEulerAngles -= Vector3.right * verticalRotation * dt;
         
         if (Input.GetKey(KeyCode.DownArrow))
-            transform.localEulerAngles += Vector3.right * verticalRotation * Time.deltaTime;
+            transform.localEulerAngles += Vector3.right * verticalRotation * dt;
         
         if (Input.GetKey(KeyCode.LeftArrow))
-            transform.localEulerAngles -= Vector3.up * horizontalRotation * Time.deltaTime;
+            transform.localEulerAngles -= Vector3.up * horizontalRotation * dt;
         
         if (Input.GetKey(KeyCode.RightArrow))
-            transform.localEulerAngles += Vector3.up * horizontalRotation * Time.deltaTime;
+            transform.localEulerAngles += Vector3.up * horizontalRotation * dt;
 
 
         if (Input.GetKey(KeyCode.W))
-            transform.position += transform.forward * speed * Time.deltaTime;
+            transform.position += transform.forward * speed * dt;
 
         if (Input.GetKey(KeyCode.S))
-            transform.position -= transform.forward * speed * Time.deltaTime;
+            transform.position -= transform.forward * speed * dt;
 
         if (Input.GetKey(KeyCode.A))
-            transform.position -= transform.right * speed * Time.deltaTime;
+            transform.position -= transform.right * speed * dt;
 
         if (Input.GetKey(KeyCode.D))
-            transform.position += transform.right * speed * Time.deltaTime;
+            transform.position += transform.right * speed * dt;
     }
 }

@@ -1,29 +1,35 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class TradeManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text playerNameIndicator;
-    [SerializeField] private TMP_Text playerScreen;
+    [SerializeField] private TMP_Text playerInventoryScreen;
+    [SerializeField] private TMP_Text playerMoneyScreen;
 
-    [SerializeField] private TMP_Text containerNameIndicator;
-    [SerializeField] private TMP_Text containerScreen;
+    [SerializeField] private TMP_Text traderNameIndicator;
+    [SerializeField] private TMP_Text otherInventoryScreen;
+    [SerializeField] private TMP_Text otherMoneyScreen;
 
     [SerializeField] private TMP_Text systemButtons;
 
     [SerializeField] private int showCount = 10;
 
-//    private List<Item> playerItems = new List<Item>();
-//    private List<Item> containerItems = new List<Item>();
+    GameObject centerDisplayObject;
+    [SerializeField] GameObject centerDisplayLocation;
+    [SerializeField] TMP_Text itemDescription;
+
+    [SerializeField] Color displayObjectColor;
 
     private bool isPlayerManage = false;
-    private int containerIndex = 0;
     private int playerIndex = 0;
+    private int otherIndex = 0;
 
     private string playerName;
-    private string containerName;
+    private string tradersName;
 
     private float heldUp = 0;
     private float heldDown = 0;
@@ -31,190 +37,262 @@ public class TradeManager : MonoBehaviour
     private float heldTime = 0.5f;
     private float heldReduction = 0.75f;
 
-    private PlayerManager player;
-    private Container container;
-
+    private SimpleInventory playerInventory;
+    private SimpleInventory otherInventory;
+    
     private void Start()
     {
         systemButtons.text = "";
-
         systemButtons.text += "[tab] - switch inventories   |   [E] - transfer   |   [esc] - leave";
     }
 
-    public void SetUp(ref PlayerManager player, ref Container container)
-    {
-        playerName = player.Name;
-        containerName = container.gameObject.name;
+    public void SetUp(SimplePlayer player, NPC npc)
+    {        
+        playerName = player.name;
+        tradersName = npc.Name;
 
-        playerNameIndicator.text = playerName;
-        containerNameIndicator.text = containerName;
+        playerNameIndicator.text = player.name;
+        traderNameIndicator.text = npc.Name;
 
-        this.player = player;
-        this.container = container;
+        this.playerInventory = player.inventory;
+        this.otherInventory = npc.inventory;
+
+        DisplayChange();
     }
 
     public void update(float dt)
     {
-        //  updates container items
+        #region update center display
+        if(centerDisplayObject)
         {
-            containerNameIndicator.text = containerName;
-            if (!isPlayerManage)
-                containerNameIndicator.text += "-";
+            centerDisplayObject.transform.Rotate(15 * dt * Vector3.up);
+        }
+            
+        #endregion
 
-            containerScreen.text = "";
-
-            int start = Mathf.Min(containerIndex, Mathf.Max(container.ItemList.Count - showCount, 0));
-            int valid = Mathf.Max((containerIndex > 0 && containerIndex < container.ItemList.Count - 2) ? start - 1 : start, 0);
-            for (int i = 0; i < showCount; i++, valid++)
+        #region manage input
+        //  switch to other inventory
+        {
+            if (Input.GetKeyDown(KeyCode.Tab))
             {
-                if (valid < start + showCount - ((containerIndex > 0 && containerIndex < container.ItemList.Count - 2) ? 1 : 0) && valid < container.ItemList.Count && valid >= 0)
-                {
-                    if (valid == containerIndex && !isPlayerManage)
-                        containerScreen.text += "- " + container.ItemList[valid].Name + " -";
-                    else
-                        containerScreen.text += container.ItemList[valid].Name;
-                }
-
-
-                containerScreen.text += "\n";
+                isPlayerManage = !isPlayerManage;
+                DisplayChange();
+                return;
             }
-
-            if (container.ItemList.Count > 0)
-                containerScreen.text += "\nE - Transfer";
         }
 
-
-        //  updates playerItems
+        //  manage index scrolling
         {
-            playerNameIndicator.text = playerName;
-            if (isPlayerManage)
-                playerNameIndicator.text += "-";
+            if ((Input.GetKey(KeyCode.E) && !Input.GetKeyDown(KeyCode.E)) || (Input.GetKey(KeyCode.Return) && !Input.GetKeyDown(KeyCode.Return)))
+                heldEnter += Time.deltaTime;
+            else
+                heldEnter = 0;
 
-            playerScreen.text = "";
+            if ((Input.GetKey(KeyCode.W) && !Input.GetKeyDown(KeyCode.W)) || (Input.GetKey(KeyCode.UpArrow) && !Input.GetKeyDown(KeyCode.UpArrow)))
+                heldUp += Time.deltaTime;
+            else
+                heldUp = 0;
 
-/*            int start = Mathf.Min(playerIndex, Mathf.Max(player.ItemList.Count - showCount, 0));
-            int valid = Mathf.Max((playerIndex > 0 && playerIndex < player.ItemList.Count - 2) ? start - 1 : start, 0);
-            for (int i = 0; i < showCount; i++, valid++)
+            if ((Input.GetKey(KeyCode.S) && !Input.GetKeyDown(KeyCode.S)) || (Input.GetKey(KeyCode.DownArrow) && !Input.GetKeyDown(KeyCode.DownArrow)))
+                heldDown += Time.deltaTime;
+            else
+                heldDown = 0;
+
+            if (Input.mouseScrollDelta.y < 0 || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || heldDown > heldTime)
             {
-                if (valid < start + showCount - ((playerIndex > 0 && playerIndex < player.ItemList.Count - 2) ? 1 : 0) && valid < player.ItemList.Count && valid >= 0)
+                if (isPlayerManage)
                 {
-                    if (valid == playerIndex && isPlayerManage)
-                        playerScreen.text += "- " + player.ItemList[valid].Name + " -";
-                    else
-                        playerScreen.text += player.ItemList[valid].Name;
-                }
-
-                playerScreen.text += "\n";
-            }*/
-        }
-
-
-        //  manages user input
-        {
-            //  switch to other inventory
-            {
-                if(Input.GetKeyDown(KeyCode.Tab))
-                {
-                    isPlayerManage = !isPlayerManage;
-                    return;
-                }
-            }
-
-            //  manage index scrolling
-            {
-                if ((Input.GetKey(KeyCode.E) && !Input.GetKeyDown(KeyCode.E)) || (Input.GetKey(KeyCode.Return) && !Input.GetKeyDown(KeyCode.Return)))
-                    heldEnter += dt;
-                else
-                    heldEnter = 0;
-
-                if ((Input.GetKey(KeyCode.W) && !Input.GetKeyDown(KeyCode.W)) || (Input.GetKey(KeyCode.UpArrow) && !Input.GetKeyDown(KeyCode.UpArrow)))
-                    heldUp += dt;
-                else
-                    heldUp = 0;
-
-                if ((Input.GetKey(KeyCode.S) && !Input.GetKeyDown(KeyCode.S)) || (Input.GetKey(KeyCode.DownArrow) && !Input.GetKeyDown(KeyCode.DownArrow)))
-                    heldDown += dt;
-                else
-                    heldDown = 0;
-
-                if (Input.mouseScrollDelta.y < 0 || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || heldDown > heldTime)
-                {
-                    if (isPlayerManage)
+                    if (playerIndex < playerInventory.items.Count - 1)
                     {
-                        //if (playerIndex < player.ItemList.Count - 1) playerIndex++;
+                        playerIndex++;
+                        DisplayChange();
                     }
-                    else
+                }
+                else
+                {
+                    if (otherIndex < otherInventory.items.Count - 1)
                     {
-                        if (containerIndex < container.ItemList.Count - 1) containerIndex++;
+                        otherIndex++;
+                        DisplayChange();
                     }
+                }
 
                     heldDown = heldTime * heldReduction;
-                }
-
-                if (Input.mouseScrollDelta.y > 0 || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || heldUp > heldTime)
-                {
-                    if (isPlayerManage)
-                    {
-                        if (playerIndex > 0) playerIndex--;
-                    }
-                    else
-                    {
-                        if (containerIndex > 0) containerIndex--;
-                    }
-
-                    heldUp = heldTime * heldReduction;
-                }
             }
 
-            //  transfer if valid index
+            if (Input.mouseScrollDelta.y > 0 || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || heldUp > heldTime)
             {
-                if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Return) || heldEnter > heldTime)
+                if (isPlayerManage)
                 {
-                    if(isPlayerManage)
+                    if (playerIndex > 0)
                     {
-                        /*if(playerIndex >= 0 && playerIndex < player.ItemList.Count)
-                        {
-                            List<Item> tempList = new List<Item>();
-                            tempList.AddRange(container.ItemList);
-                            tempList.Add(player.ItemList[playerIndex]);
-                            container.ItemList = tempList;
-
-                            tempList = new List<Item>();
-                            tempList.AddRange(player.ItemList);
-                            tempList.Remove(player.ItemList[playerIndex]);
-                            player.ItemList = tempList;
-
-                            if (playerIndex > player.ItemList.Count - 1) playerIndex = player.ItemList.Count - 1;
-                        }*/
+                        playerIndex--;
+                        DisplayChange();
                     }
-                    else
-                    {
-                        if (containerIndex >= 0 && containerIndex < container.ItemList.Count)
-                        {
-                            List<Item> tempList = new List<Item>();
-                            //tempList.AddRange(player.ItemList);
-                            tempList.Add(container.ItemList[containerIndex]);
-                            //player.ItemList = tempList;
-
-                            tempList = new List<Item>();
-                            tempList.AddRange(container.ItemList);
-                            tempList.Remove(container.ItemList[containerIndex]);
-                            container.ItemList = tempList;
-
-                            if (containerIndex > container.ItemList.Count - 1) containerIndex = container.ItemList.Count - 1;
-                        }
-                    }
-
-                    heldEnter = heldTime * heldReduction;
-                    return;
                 }
-            }
+                else
+                {
+                    if (otherIndex > 0)
+                    {
+                        otherIndex--;
+                        DisplayChange();
+                    }
+                }
 
-            //  exit trade
-            {
-                if(Input.GetKeyDown(KeyCode.Escape))
-                    GameManager.Instance.GameState = GameManager.State.PLAYER;
+                heldUp = heldTime * heldReduction;
             }
         }
+
+        //  transfer if valid index
+        {
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Return) || heldEnter > heldTime)
+            {
+                if (isPlayerManage)
+                {
+                    // sell item to trader
+
+                    if(playerIndex >= 0 && playerIndex < playerInventory.items.Count)
+                    {
+                        SimpleItem soldItem = playerInventory.items[playerIndex];
+                        if (otherInventory.money >= soldItem.Value)
+                        {
+                            playerInventory.money += soldItem.Value;
+                            otherInventory.money -= soldItem.Value;
+                            playerInventory.items.Remove(soldItem);
+                            otherInventory.items.Add(soldItem);
+                            DisplayChange();
+                        }
+                        else
+                        {
+                            print(tradersName + " cannot afford to buy " + soldItem.Name + " for " + soldItem.Value);
+                        }
+
+                        if (playerIndex > playerInventory.items.Count - 1) playerIndex = playerInventory.items.Count - 1;
+                    }
+                }
+                else
+                {
+                    // buy item from trader
+                    if (otherIndex >= 0 && otherIndex < otherInventory.items.Count)
+                    {
+                        SimpleItem boughtItem = otherInventory.items[otherIndex];
+                        if(playerInventory.money >= boughtItem.Value)
+                        {
+                            playerInventory.money -= boughtItem.Value;
+                            otherInventory.money += boughtItem.Value;
+                            playerInventory.items.Add(boughtItem);
+                            otherInventory.items.Remove(boughtItem);
+                            DisplayChange();
+                        }
+                        else
+                        {
+                            print("You cannot afford to buy " + boughtItem.Name + " for " + boughtItem.Value);
+                        }
+
+                        if (otherIndex > otherInventory.items.Count - 1) otherIndex = otherInventory.items.Count - 1;
+                    }
+                }
+
+                heldEnter = heldTime * heldReduction;
+                return;
+            }
+        }
+
+        //  exit trade
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                GameObject.Find("GameManager").GetComponent<SimpleGameManager>().EndTrade();
+                Destroy(centerDisplayObject);
+                //GameManager.Instance.GameState = GameManager.State.PLAYER;
+            }
+        }
+        #endregion
+    }
+
+    public void DisplayChange()
+    {
+        #region update trader Items
+        otherMoneyScreen.text = "$" + otherInventory.money;
+        traderNameIndicator.text = tradersName;
+        if (!isPlayerManage)
+            traderNameIndicator.text += "-";
+
+        otherInventoryScreen.text = "";
+
+        int traderStart = Mathf.Min(otherIndex, Mathf.Max(otherInventory.items.Count - showCount, 0));
+        int traderValid = Mathf.Max((otherIndex > 0 && otherIndex < otherInventory.items.Count - 2) ? traderStart - 1 : traderStart, 0);
+        for (int i = 0; i < showCount; i++, traderValid++)
+        {
+            if (traderValid < traderStart + showCount - ((otherIndex > 0 && otherIndex < otherInventory.items.Count - 2) ? 1 : 0) && traderValid < otherInventory.items.Count && traderValid >= 0)
+            {
+                if (traderValid == otherIndex && !isPlayerManage)
+                    otherInventoryScreen.text += "- " + otherInventory.items[traderValid].Name + " -";
+                else
+                    otherInventoryScreen.text += otherInventory.items[traderValid].Name;
+            }
+
+            otherInventoryScreen.text += "\n";
+        }
+        #endregion
+        #region update player Items
+        playerMoneyScreen.text = "$" + playerInventory.money;
+        playerNameIndicator.text = playerName;
+        if (isPlayerManage)
+            playerNameIndicator.text += "-";
+
+        playerInventoryScreen.text = "";
+
+        int playerStart = Mathf.Min(playerIndex, Mathf.Max(playerInventory.items.Count - showCount, 0));
+        int playerValid = Mathf.Max((playerIndex > 0 && playerIndex < playerInventory.items.Count - 2) ? playerStart - 1 : playerStart, 0);
+        for (int i = 0; i < showCount; i++, playerValid++)
+        {
+            if (playerValid < playerStart + showCount - ((playerIndex > 0 && playerIndex < playerInventory.items.Count - 2) ? 1 : 0) && playerValid < playerInventory.items.Count && playerValid >= 0)
+            {
+                if (playerValid == playerIndex && isPlayerManage)
+                    playerInventoryScreen.text += "- " + playerInventory.items[playerValid].Name + " -";
+                else
+                    playerInventoryScreen.text += playerInventory.items[playerValid].Name;
+            }
+
+            playerInventoryScreen.text += "\n";
+        }
+        #endregion
+
+        #region update center display
+        Destroy(centerDisplayObject);
+        if(isPlayerManage)
+        {
+            if(playerIndex >= 0 && playerIndex < playerInventory.items.Count)
+            {
+                centerDisplayObject = Instantiate(playerInventory.items[playerIndex].visualPrefab);
+                itemDescription.text = playerInventory.items[playerIndex].getDesc();
+
+                Vector3 pos = Camera.main.transform.position + Camera.main.transform.forward * 3;
+
+//                pos = Camera.main.ScreenToWorldPoint()
+
+
+                centerDisplayObject.transform.position = pos;
+
+                centerDisplayObject.GetComponent<Renderer>().material.color = displayObjectColor;
+            }
+        }
+        else
+        {
+            if (otherIndex >= 0 && otherIndex < otherInventory.items.Count)
+            {
+                centerDisplayObject = Instantiate(otherInventory.items[otherIndex].visualPrefab);
+                itemDescription.text = otherInventory.items[otherIndex].getDesc();
+
+                Vector3 pos = Camera.main.transform.position + Camera.main.transform.forward * 3;
+
+                centerDisplayObject.transform.position = pos;
+
+                centerDisplayObject.GetComponent<Renderer>().material.color = displayObjectColor;
+            }
+        }
+
+        #endregion
     }
 }

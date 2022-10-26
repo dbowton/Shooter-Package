@@ -9,11 +9,6 @@ public abstract class Character : MonoBehaviour
 
     internal bool die;
 
-    private void Update()
-    {
-        update(Time.deltaTime);
-    }
-
     public virtual void update(float dt) {}
 
     public virtual void Hit() { }

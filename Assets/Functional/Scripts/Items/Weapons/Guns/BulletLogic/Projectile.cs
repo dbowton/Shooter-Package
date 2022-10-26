@@ -55,7 +55,7 @@ public class Projectile : BulletLogic
         projectiles.Add(projectile);
     }
 
-    private void Update()
+    public override void Update()
     {
         base.Update();
 
