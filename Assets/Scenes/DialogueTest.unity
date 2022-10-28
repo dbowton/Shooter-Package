@@ -426,8 +426,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5acd076719f7a44b1caae7e782d0bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: Pick a color to make the sphere.
+  prompt: 'Pick a color to make the sphere.
+
+    (Allows Interupts)'
   voicePrompt: {fileID: 8300000, guid: 1bd1c29525c12624d8d0cdd1a5a599aa, type: 3}
+  voicePromptVolume: 1
   allowInterupts: 1
   options:
   - textResponse: Yellow
@@ -448,6 +451,7 @@ MonoBehaviour:
           m_CallState: 2
     nextConversation: {fileID: 0}
     voiceResponse: {fileID: 8300000, guid: 6a5c2e8ba183fd84ea50b871b95d00f9, type: 3}
+    voiceResponseVolume: 1
   - textResponse: Red
     action:
       m_PersistentCalls:
@@ -466,6 +470,7 @@ MonoBehaviour:
           m_CallState: 2
     nextConversation: {fileID: 0}
     voiceResponse: {fileID: 8300000, guid: e4654f1b737a37f46a43f85debf60768, type: 3}
+    voiceResponseVolume: 1
   - textResponse: Blue
     action:
       m_PersistentCalls:
@@ -484,12 +489,14 @@ MonoBehaviour:
           m_CallState: 2
     nextConversation: {fileID: 0}
     voiceResponse: {fileID: 8300000, guid: ea308df761b757f48a5a9b27b9a3350d, type: 3}
+    voiceResponseVolume: 1
   - textResponse: More Options
     action:
       m_PersistentCalls:
         m_Calls: []
     nextConversation: {fileID: 1689142046}
     voiceResponse: {fileID: 8300000, guid: d1208badab8c38341aee5912b12da67e, type: 3}
+    voiceResponseVolume: 1
 --- !u!4 &1689142045
 Transform:
   m_ObjectHideFlags: 0
@@ -517,8 +524,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5acd076719f7a44b1caae7e782d0bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: Maybe one of these colors is better to make the sphere?
+  prompt: 'Maybe one of these colors is better to make the sphere?
+
+    (No Interupts)'
   voicePrompt: {fileID: 8300000, guid: 705d47697a0947949b706c8edf9a0476, type: 3}
+  voicePromptVolume: 1
   allowInterupts: 0
   options:
   - textResponse: Black
@@ -539,6 +549,7 @@ MonoBehaviour:
           m_CallState: 2
     nextConversation: {fileID: 0}
     voiceResponse: {fileID: 8300000, guid: 84fbec6e4ec0f7f4e9c6ad468af5b5c8, type: 3}
+    voiceResponseVolume: 1
   - textResponse: Magenta
     action:
       m_PersistentCalls:
@@ -557,12 +568,14 @@ MonoBehaviour:
           m_CallState: 2
     nextConversation: {fileID: 0}
     voiceResponse: {fileID: 8300000, guid: f44ca499bd5f23945b5af4a2d9d38cca, type: 3}
+    voiceResponseVolume: 1
   - textResponse: Previous Options
     action:
       m_PersistentCalls:
         m_Calls: []
     nextConversation: {fileID: 1689142043}
     voiceResponse: {fileID: 8300000, guid: b7030071a035c4945a46e5f936e9a195, type: 3}
+    voiceResponseVolume: 1
 --- !u!82 &1689142047
 AudioSource:
   m_ObjectHideFlags: 0
@@ -673,14 +686,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingPoint: {fileID: 1689142043}
   audioSource: {fileID: 1689142047}
-  oneOptionUI: {fileID: 3673883532527923807, guid: c2af49dfd78db54409a1bb325a3b35bd, type: 3}
-  twoOptionUI: {fileID: 1771702053659325440, guid: 6c14d926547d3cc4d8f0b663aa393f6b, type: 3}
-  threeOptionUI: {fileID: 4093252591675166527, guid: 1fd84a4d047fd664783fc59eb22076a5, type: 3}
-  fourOptionUI: {fileID: 9112725080240834047, guid: ed4c60561ee65f841a66460f62d7af53, type: 3}
-  keyOne: 49
-  keyTwo: 50
-  keyThree: 51
-  keyFour: 52
+  UIPrefabs:
+  - {fileID: 3673883532527923807, guid: c2af49dfd78db54409a1bb325a3b35bd, type: 3}
+  - {fileID: 1771702053659325440, guid: 6c14d926547d3cc4d8f0b663aa393f6b, type: 3}
+  - {fileID: 4093252591675166527, guid: 1fd84a4d047fd664783fc59eb22076a5, type: 3}
+  - {fileID: 9112725080240834047, guid: ed4c60561ee65f841a66460f62d7af53, type: 3}
+  optionKeyCodes: 31000000320000003300000034000000
 --- !u!1 &1729076610
 GameObject:
   m_ObjectHideFlags: 0

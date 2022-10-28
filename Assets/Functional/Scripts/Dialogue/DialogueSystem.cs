@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,15 +9,8 @@ public class DialogueSystem : MonoBehaviour
     private Conversation currentConversation;
     bool switching = false;
 
-    [SerializeField] GameObject oneOptionUI;
-    [SerializeField] GameObject twoOptionUI;
-    [SerializeField] GameObject threeOptionUI;
-    [SerializeField] GameObject fourOptionUI;
-
-    [SerializeField] KeyCode keyOne = KeyCode.LeftArrow;
-    [SerializeField] KeyCode keyTwo = KeyCode.UpArrow;
-    [SerializeField] KeyCode keyThree = KeyCode.RightArrow;
-    [SerializeField] KeyCode keyFour = KeyCode.DownArrow;
+    public List<GameObject> UIPrefabs = new List<GameObject>();
+    public List<KeyCode> optionKeyCodes = new List<KeyCode>();
 
     private GameObject currentUI;
 
@@ -34,21 +26,9 @@ public class DialogueSystem : MonoBehaviour
         int selected = -1;
         if(!switching && (currentConversation.allowInterupts || !audioSource.isPlaying))
         {
-            if(Input.GetKeyDown(keyOne))
+            for(int i = 0; i < currentConversation.options.Count; i++)
             {
-                selected = 0;
-            }
-            else if (Input.GetKeyDown(keyTwo) && currentConversation.options.Count > 1)
-            {
-                selected = 1;
-            }
-            else if (Input.GetKeyDown(keyThree) && currentConversation.options.Count > 2)
-            {
-                selected = 2;
-            }
-            else if (Input.GetKeyDown(keyFour) && currentConversation.options.Count > 3)
-            {
-                selected = 3;
+                if (Input.GetKeyDown(optionKeyCodes[i])) selected = i;
             }
         }
         else
@@ -86,33 +66,14 @@ public class DialogueSystem : MonoBehaviour
     {
         Destroy(currentUI);
 
-        GameObject uiPrefab = fourOptionUI;
-        switch (currentConversation.options.Count)
-        {
-            case 1:
-                uiPrefab = oneOptionUI;
-                break;
-            case 2:
-                uiPrefab = twoOptionUI;
-                break;
-            case 3:
-                uiPrefab = threeOptionUI;
-                break;
-            case 4:
-                uiPrefab = fourOptionUI;
-                break;
-            default:
-                break;
-        }
-
-        currentUI = Instantiate(uiPrefab);
+        currentUI = Instantiate(UIPrefabs[currentConversation.options.Count - 1]);
 
         DialogueUI ui = currentUI.GetComponentInChildren<DialogueUI>();
         ui.prompt.text = currentConversation.prompt;
 
-        ui.option1.text = "[" + keyOne.ToString() + "] - " + currentConversation.options[0].textResponse;
-        if (currentConversation.options.Count > 1) ui.option2.text = "[" + keyTwo.ToString() + "] - " + currentConversation.options[1].textResponse;
-        if (currentConversation.options.Count > 2) ui.option3.text = "[" + keyThree.ToString() + "] - " + currentConversation.options[2].textResponse;
-        if (currentConversation.options.Count > 3) ui.option4.text = "[" + keyFour.ToString() + "] - " + currentConversation.options[3].textResponse;
+        for(int i = 0; i < currentConversation.options.Count; i++)
+        {
+            ui.optionTexts[i].text = "[" + optionKeyCodes[i].ToString() + "] - " + currentConversation.options[i].textResponse;
+        }
     }
 }

@@ -322,10 +322,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prompt: {fileID: 3396103978362829978}
-  option1: {fileID: 3396103977820690992}
-  option2: {fileID: 6279239533482599342}
-  option3: {fileID: 8805375287322093099}
-  option4: {fileID: 915034563463783908}
+  optionTexts:
+  - {fileID: 3396103977820690992}
+  - {fileID: 6279239533482599342}
+  - {fileID: 8805375287322093099}
+  - {fileID: 915034563463783908}
 --- !u!1 &3396103978362829980
 GameObject:
   m_ObjectHideFlags: 0
