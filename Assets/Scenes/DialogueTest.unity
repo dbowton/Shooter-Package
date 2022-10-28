@@ -404,6 +404,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1689142045}
   - component: {fileID: 1689142048}
+  - component: {fileID: 1689142049}
   - component: {fileID: 1689142043}
   - component: {fileID: 1689142046}
   - component: {fileID: 1689142047}
@@ -684,7 +685,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4581f01d557a66c4d80798a916e0d732, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingPoint: {fileID: 1689142043}
+  startingPoint: {fileID: 1689142049}
+  forceIntroduction: 1
+  returningPoint: {fileID: 1689142043}
   audioSource: {fileID: 1689142047}
   UIPrefabs:
   - {fileID: 3673883532527923807, guid: c2af49dfd78db54409a1bb325a3b35bd, type: 3}
@@ -692,6 +695,37 @@ MonoBehaviour:
   - {fileID: 4093252591675166527, guid: 1fd84a4d047fd664783fc59eb22076a5, type: 3}
   - {fileID: 9112725080240834047, guid: ed4c60561ee65f841a66460f62d7af53, type: 3}
   optionKeyCodes: 31000000320000003300000034000000
+--- !u!114 &1689142049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689142042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5acd076719f7a44b1caae7e782d0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prompt: Hello, would you like to change the sphere's color?
+  voicePrompt: {fileID: 8300000, guid: 37e52164ae92df640b607326bb2da2a4, type: 3}
+  voicePromptVolume: 1
+  allowInterupts: 0
+  options:
+  - textResponse: Yes
+    action:
+      m_PersistentCalls:
+        m_Calls: []
+    nextConversation: {fileID: 1689142043}
+    voiceResponse: {fileID: 8300000, guid: 108340d3c965a394e90f5ec99b5d7989, type: 3}
+    voiceResponseVolume: 1
+  - textResponse: No
+    action:
+      m_PersistentCalls:
+        m_Calls: []
+    nextConversation: {fileID: 0}
+    voiceResponse: {fileID: 8300000, guid: 61b8cae366b2bef47a606bb5e9e276a3, type: 3}
+    voiceResponseVolume: 1
 --- !u!1 &1729076610
 GameObject:
   m_ObjectHideFlags: 0
