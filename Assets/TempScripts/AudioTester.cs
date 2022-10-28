@@ -5,6 +5,11 @@ public class AudioTester : MonoBehaviour
     [SerializeField] string groupName;
     [SerializeField] string soundName;
 
+    private void Start()
+    {
+        print(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+    }
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.UpArrow))

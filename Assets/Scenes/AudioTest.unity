@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupName: 
-  soundName: RifleFire
+  soundName: Yes
 --- !u!1 &464888387
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +407,15 @@ MonoBehaviour:
     - name: PistolFire
       volume: 1
       audioClip: {fileID: 8300000, guid: 473b864555f7d5245afc907352c48e19, type: 3}
+  - group: VoiceLines
+    mixerGroup: {fileID: 0}
+    soundClips:
+    - name: Yes
+      volume: 1
+      audioClip: {fileID: 8300000, guid: 108340d3c965a394e90f5ec99b5d7989, type: 3}
+    - name: No
+      volume: 1
+      audioClip: {fileID: 8300000, guid: 61b8cae366b2bef47a606bb5e9e276a3, type: 3}
 --- !u!4 &1826608971
 Transform:
   m_ObjectHideFlags: 0

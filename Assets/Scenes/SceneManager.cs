@@ -9,12 +9,24 @@ public class SceneManager : Singleton<SceneManager>
     [SerializeField] GameObject fadeScreenPrefab;
     GameObject screenFade;
 
+    public float defaultDelay = 0;
+
     private void Update()
     {
         sceneTimer?.Update();
 
         if (screenFade)
             screenFade.GetComponentsInChildren<CanvasRenderer>().ToList().ForEach(x => x.SetAlpha(sceneTimer.GetElapsed));
+    }
+
+    public void SetDefaultDelay(float newDelay)
+    {
+        defaultDelay = newDelay;
+    }
+
+    public void Transition(string sceneName)
+    {
+        Transition(sceneName, defaultDelay);
     }
 
     public void Transition(string sceneName, float tranisionTime)
@@ -32,27 +44,30 @@ public class SceneManager : Singleton<SceneManager>
     {
         if (string.IsNullOrEmpty(newScene)) return;
 
-        bool sceneValid = false;
-
-
+        bool validScene = false;
         for(int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings; i++)
         {
-            print(UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(i).name);
+            string path = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i);
+            int slash = path.LastIndexOf('/');
+            string name = path.Substring(slash + 1);
+            int dot = name.LastIndexOf('.');
 
-            if (UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(i).name.Equals(newScene))
+            if(name.Substring(0, dot).Equals(newScene))
             {
-                sceneValid = true;
+                validScene = true;
                 break;
             }
         }
 
-        if (!sceneValid)
+        if (validScene)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(newScene);
+            newScene = "";
+        }
+        else
         {
             print("Invalid Scene: " + newScene);
             return;
         }
-
-        UnityEngine.SceneManagement.SceneManager.LoadScene(newScene);
-        newScene = "";
     }
 }

@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 546812989}
   - component: {fileID: 546812988}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: DialogueTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,6 +394,52 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1288102452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1288102454}
+  - component: {fileID: 1288102453}
+  m_Layer: 0
+  m_Name: SceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1288102453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288102452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2662577ac4f87e43abad44718ebd2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeScreenPrefab: {fileID: 8705723174113189210, guid: 5e48ba4ecc8c5d043a14c83846b16db3, type: 3}
+  defaultDelay: 0
+--- !u!4 &1288102454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288102452}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1689142042
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,7 +455,7 @@ GameObject:
   - component: {fileID: 1689142046}
   - component: {fileID: 1689142047}
   m_Layer: 0
-  m_Name: DialogueTest
+  m_Name: SphereColorDialogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,24 +518,36 @@ MonoBehaviour:
     nextConversation: {fileID: 0}
     voiceResponse: {fileID: 8300000, guid: e4654f1b737a37f46a43f85debf60768, type: 3}
     voiceResponseVolume: 1
-  - textResponse: Blue
+  - textResponse: Go To AudioScene
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 546812988}
-          m_TargetAssemblyTypeName: DialogueTest, Assembly-CSharp
-          m_MethodName: ChangeColor
+        - m_Target: {fileID: 1288102453}
+          m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
+          m_MethodName: SetDefaultDelay
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 2.5
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1288102453}
+          m_TargetAssemblyTypeName: SceneManager, Assembly-CSharp
+          m_MethodName: Transition
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: blue
+            m_StringArgument: AudioTest
             m_BoolArgument: 0
           m_CallState: 2
     nextConversation: {fileID: 0}
-    voiceResponse: {fileID: 8300000, guid: ea308df761b757f48a5a9b27b9a3350d, type: 3}
+    voiceResponse: {fileID: 8300000, guid: a95bcb20e362170479b1637e1947dbc3, type: 3}
     voiceResponseVolume: 1
   - textResponse: More Options
     action:
@@ -707,10 +765,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5acd076719f7a44b1caae7e782d0bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: Hello, would you like to change the sphere's color?
+  prompt: "Hello, would you like to change \nthe sphere's color?\n(No Interupts)"
   voicePrompt: {fileID: 8300000, guid: 37e52164ae92df640b607326bb2da2a4, type: 3}
   voicePromptVolume: 1
-  allowInterupts: 0
+  allowInterupts: 1
   options:
   - textResponse: Yes
     action:

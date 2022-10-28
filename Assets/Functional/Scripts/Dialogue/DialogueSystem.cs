@@ -63,11 +63,9 @@ public class DialogueSystem : MonoBehaviour
 
         if (!conversationActive) return;
 
-
         int selected = -1;
         if(!switching && (currentConversation.allowInterupts || !audioSource.isPlaying))
         {
-            print("not working");
             for (int i = 0; i < currentConversation.options.Count; i++)
             {
                 if (Input.GetKeyDown(optionKeyCodes[i])) selected = i;
@@ -77,12 +75,8 @@ public class DialogueSystem : MonoBehaviour
         {
             if(!audioSource.isPlaying)
             {
-                print("maybe");
-
                 if (currentConversation)
                 {
-                    print("should be working");
-
                     audioSource.clip = currentConversation.voicePrompt;
                     audioSource.volume = currentConversation.voicePromptVolume;
                     audioSource.Play();
