@@ -107,7 +107,7 @@ public class SoundManager : Singleton<SoundManager>
         return soundPlayed;
     }
 
-    public bool PlayOneShot(string soundName, string soundGroup)
+    public bool PlayOneShot(string soundName, string soundGroup = "")
     {
         bool soundPlayed = false;
 
@@ -125,8 +125,8 @@ public class SoundManager : Singleton<SoundManager>
         return soundPlayed;
     }
 
-    private void PlaySound(int soundGroup, int soundName)
+/*    private void PlaySound(int soundGroup, int soundName)
     {
 
-    }
+    }*/
 }

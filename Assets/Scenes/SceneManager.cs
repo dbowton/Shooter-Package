@@ -1,8 +1,7 @@
 using System.Linq;
-using TMPro;
 using UnityEngine;
 
-public class SceneManager : MonoBehaviour
+public class SceneManager : Singleton<SceneManager>
 {
     Timer sceneTimer;
     string newScene;
@@ -10,15 +9,8 @@ public class SceneManager : MonoBehaviour
     [SerializeField] GameObject fadeScreenPrefab;
     GameObject screenFade;
 
-    private void Start()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) Transition("MainMenu", 0);
-
         sceneTimer?.Update();
 
         if (screenFade)
