@@ -8,7 +8,6 @@ public class SoundManager : Singleton<SoundManager>
     [SerializeField] AudioSource audioSource;
     AudioSource oneShotSource;
 
-
     private void Start()
     {
         oneShotSource = gameObject.AddComponent<AudioSource>();        
@@ -119,14 +118,13 @@ public class SoundManager : Singleton<SoundManager>
             oneShotSource.outputAudioMixerGroup = soundGroups[sound.group].mixerGroup;
             oneShotSource.volume = soundGroups[sound.group].soundClips[sound.sound].volume;
             oneShotSource.PlayOneShot(oneShotSource.clip);
-//            AudioSource.PlayClipAtPoint()
         }
 
         return soundPlayed;
     }
 
-/*    private void PlaySound(int soundGroup, int soundName)
+    private void PlayRandomSound(int soundGroup, int soundName)
     {
 
-    }*/
+    }
 }

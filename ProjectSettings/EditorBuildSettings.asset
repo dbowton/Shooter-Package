@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/DialogueTest.unity
+    path: Assets/Scenes/DemoScenes/DialogueTest.unity
     guid: a532d5328a2b7374690b790259f3ef1e
   - enabled: 1
-    path: Assets/Scenes/AudioTest.unity
+    path: Assets/Scenes/DemoScenes/AudioTest.unity
     guid: 118f5d10147ea2247b0d165763750dd8
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9eb07e2d669e9c94e9d7d3c782a916f7, type: 2}

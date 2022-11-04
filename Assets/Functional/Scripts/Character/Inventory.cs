@@ -4,8 +4,32 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
+    [HideInInspector] public bool isPlayer = false;
     public Weapon activeWeapon;
     public List<Weapon> weapons;
 
-    public List<Item> items;
+    private List<Item> items = new List<Item>();
+
+    public List<Item> Items { get { return items; } set { items = value; } }
+
+    public List<Item> startingItems = new List<Item>();
+    public float money = 0f;
+
+    private void Start()
+    {
+        items.Clear();
+        items.AddRange(startingItems);
+    }
+
+    public void AddItem(Item item)
+    {
+        print((isPlayer && (activeWeapon == null || activeWeapon is Fists) && item is Weapon));
+        item.transform.parent = gameObject.transform;
+
+        if (isPlayer && item is Weapon)
+        {
+            weapons.Add(item as Weapon);
+        }
+        else items.Add(item);
+    }
 }

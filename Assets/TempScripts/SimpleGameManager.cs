@@ -7,6 +7,7 @@ public class SimpleGameManager : MonoBehaviour
     public float gameTime = 0f;
     [SerializeField] bool AddFifteenSeconds = false;
     [SerializeField] GameObject tradeWindow;
+    TradeManager activeTradeManager;
     [SerializeField] SimplePlayer player;
 
     public List<AI> ai = new List<AI>();
@@ -36,12 +37,10 @@ public class SimpleGameManager : MonoBehaviour
         }
     }
 
-    TradeManager activeTradeManager;
-
     public void BeginTrade(NPC trader)
     {
         activeTradeManager = Instantiate(tradeWindow).GetComponent<TradeManager>();
-        activeTradeManager.SetUp(player, trader);
+//        activeTradeManager.SetUp(player, trader);
         isPaused = true;
     }
 

@@ -17,11 +17,6 @@ public class DialogueSystem : MonoBehaviour
 
     private GameObject currentUI;
 
-    private void Start()
-    {
-        BeginConversation();
-    }
-
     public void BeginConversation()
     {
         currentConversation = startingPoint;
@@ -43,11 +38,11 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    private bool conversationActive = true;
+//    private bool conversationActive = true;
 
     private void Update()
     {
-        if (conversationActive && Input.GetKeyDown(KeyCode.Escape))
+/*        if (conversationActive && Input.GetKeyDown(KeyCode.Escape))
         {
             conversationActive = false;
             currentConversation = null;
@@ -59,9 +54,9 @@ public class DialogueSystem : MonoBehaviour
             conversationActive = true;
             ReturnToConversation();
             SetUI();
-        }
+        }*/
 
-        if (!conversationActive) return;
+//        if (!conversationActive) return;
 
         int selected = -1;
         if(!switching && (currentConversation.allowInterupts || !audioSource.isPlaying))
@@ -86,7 +81,7 @@ public class DialogueSystem : MonoBehaviour
                 }
                 else
                 {
-                    conversationActive = false;
+//                    conversationActive = false;
                     Destroy(currentUI);
                 }
             }

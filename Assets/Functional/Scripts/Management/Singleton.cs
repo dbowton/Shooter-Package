@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : Component
 {
-    private static T instance;
+    private static T instance = null;
     public static T Instance
     {
         get
@@ -27,11 +27,13 @@ public class Singleton<T> : MonoBehaviour where T : Component
     {
         if (instance == null)
         {
+            print("Good Singleton");
             instance = this as T;
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
+            print("Bad Singleton");
             Destroy(gameObject);
         }
     }

@@ -16,7 +16,13 @@ public class GameManager : Singleton<GameManager>
         GAMEOVER
     }
 
-    [SerializeField] private PlayerManager testplayer;
+    public override void Awake()
+    {
+        print("Started");
+        base.Awake();
+        print("base");
+
+    }
 
     public PlayerInput input;
 
@@ -24,7 +30,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject tradeScreenPrefab;
     [SerializeField] private GameObject inventoryScreenPrefab;
 
-    public PlayerManager player;
+    [HideInInspector] public PlayerManager player;
     private TradeManager tradeManager;
     private InventoryManager inventoryMangager;
 
@@ -65,7 +71,7 @@ public class GameManager : Singleton<GameManager>
                 case State.TITLE:
                     break;
                 case State.PLAYER:
-                    testplayer.active = false;
+                    player.active = false;
 //                    testplayer.gameAnimator.enabled = false;
 //                    testplayer.viewAnimator.enabled = false;
 
@@ -84,8 +90,8 @@ public class GameManager : Singleton<GameManager>
                     break;
                 case State.TRADE:
 
-                    Destroy(tradeManager.gameObject);
-                    tradeManager = null;
+/*                    Destroy(activeTradeManager.gameObject);
+                    tradeManager = null;*/
 
                     break;
                 case State.GAMEOVER:
@@ -108,10 +114,15 @@ public class GameManager : Singleton<GameManager>
 
                     break;
                 case State.PLAYER:
-//                    if (!player) player = Instantiate(playerPrefab).GetComponent<Player>();
-                    testplayer.active = true;
-//                    testplayer.gameAnimator.enabled = true;
-//                    testplayer.viewAnimator.enabled = true;
+                    if (!player)
+                    {
+                        player = Instantiate(playerPrefab).GetComponent<PlayerManager>();
+                        input = player.playerInput;
+                    }
+
+                    player.active = true;
+//                    player .gameAnimator.enabled = true;
+//                    player.viewAnimator.enabled = true;
 
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
@@ -132,12 +143,16 @@ public class GameManager : Singleton<GameManager>
                     break;
             }
 
-            input.currentActionMap = input.actions.FindActionMap(gameState.ToString().ToLower(), false);
+//            input.currentActionMap = input.actions.FindActionMap(gameState.ToString().ToLower(), false);
         }
     }
 
     private void Update()
     {
+        gameTime += Time.deltaTime;
+        gameTime %= 2400;
+
+        print("Running");
         timers.ForEach(x => x.Update());
 
         switch (GameState)
@@ -170,7 +185,8 @@ public class GameManager : Singleton<GameManager>
             case State.INVENTORY:
                 break;
             case State.TRADE:
-                tradeManager.update(Time.deltaTime);
+                activeTradeManager?.update(Time.deltaTime);
+//                tradeManager.update(Time.deltaTime);
                 break;
             case State.GAMEOVER:
                 break;
@@ -179,12 +195,24 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void Trade(Container container)
+    [SerializeField] GameObject tradeWindow;
+    TradeManager activeTradeManager;
+
+    public void BeginTrade(NPC trader)
     {
         GameState = State.TRADE;
-        tradeManager = Instantiate(tradeScreenPrefab).GetComponent<TradeManager>();
-//        tradeManager.SetUp(ref testplayer, ref container);
+        activeTradeManager = Instantiate(tradeWindow).GetComponent<TradeManager>();
+        activeTradeManager.SetUp(player, trader);
+//        isPaused = true;
     }
+    public void EndTrade()
+    {
+        //        isPaused = false;
+        GameState = State.PLAYER;
+        Destroy(activeTradeManager.gameObject);
+        activeTradeManager = null;
+    }
+
 
     public void OnInventoryReturn(InputAction.CallbackContext callbackContext)
     {

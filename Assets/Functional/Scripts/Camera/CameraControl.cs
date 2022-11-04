@@ -6,7 +6,7 @@ public abstract class CameraControl : MonoBehaviour
     public float weight = 0;
     public Vector3 offset = Vector3.zero;
     public Vector3 angleOffset = Vector3.zero;
-    public bool isActive { get { return SmartCamera.activeCamera.Equals(this); } }
+    public bool isActive { get { return SmartCamera.activeCamera != null && SmartCamera.activeCamera.Equals(this); } }
 
     public float Weight { get { return weight; } set { weight = value; Camera.main.transform.GetComponent<SmartCamera>().CheckWeights(); } }
 
@@ -20,7 +20,7 @@ public abstract class CameraControl : MonoBehaviour
 
     protected virtual void OnValidate()
     {
-        if (!Camera.main.TryGetComponent<SmartCamera>(out _))
+        if (Camera.main && !Camera.main.TryGetComponent<SmartCamera>(out _))
             Camera.main.gameObject.AddComponent(typeof(SmartCamera));
     }
 

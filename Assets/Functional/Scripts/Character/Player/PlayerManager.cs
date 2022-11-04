@@ -13,6 +13,8 @@ public class PlayerManager : Character
     [SerializeField] FirstPersonCamera firstPersonCamera;
     [SerializeField] ThirdPersonCamera thirdPersonCamera;
 
+    public PlayerInput playerInput;
+
     Timer coyoteTimer;
 
     [Serializable]
@@ -67,6 +69,7 @@ public class PlayerManager : Character
     private void Awake()
     {
         playerData.spineWeights.Normalize();
+        playerData.inventory.isPlayer = true;
     }
 
     private void Start() 
@@ -328,18 +331,21 @@ public class PlayerManager : Character
     #region Player Controls
     public void OnMove(InputAction.CallbackContext callbackContext)
     {
+        if (!active) return;
         idleTimer.Reset();
         playerData.dir = callbackContext.ReadValue<Vector2>();
     }
 
     public void OnLook(InputAction.CallbackContext callbackContext)
     {
+        if (!active) return;
         idleTimer.Reset();
         playerData.look = callbackContext.ReadValue<Vector2>();
     }
 
     public void OnAim(InputAction.CallbackContext callbackContext)
     {
+        if (!active) return;
         idleTimer.Reset();
         if (callbackContext.performed)
             playerData.ads = true;
@@ -349,6 +355,7 @@ public class PlayerManager : Character
 
     public void OnFire(InputAction.CallbackContext callbackContext)
     {
+        if (!active) return;
         idleTimer.Reset();
 
         if (callbackContext.performed)
@@ -362,14 +369,16 @@ public class PlayerManager : Character
 
     public void OnReload(InputAction.CallbackContext callbackContext)
     {
-        if(callbackContext.performed)
+        if (!active) return;
+        if (callbackContext.performed)
             if (playerData.inventory.activeWeapon is Gun) 
                 (playerData.inventory.activeWeapon as Gun).Reload();
     }
 
     public void OnEquip(InputAction.CallbackContext callbackContext)
     {
-        if(callbackContext.performed)
+        if (!active) return;
+        if (callbackContext.performed)
         {
             if(playerData.inventory.activeWeapon)
             {
@@ -401,6 +410,7 @@ public class PlayerManager : Character
 
     public void OnSprint(InputAction.CallbackContext callbackContext)
     {
+        if (!active) return;
         if (GameManager.Instance.input.currentControlScheme.Equals("MouseKeyboard"))
         {
             if (callbackContext.performed && playerData.dir.y > 0)
@@ -417,6 +427,8 @@ public class PlayerManager : Character
 
     public void OnCrouch(InputAction.CallbackContext callbackContext)
     {
+        if (!active) return;
+
         if (GameManager.Instance.input.currentControlScheme.Equals("MouseKeyboard"))
         {
             if (callbackContext.performed)
@@ -445,7 +457,7 @@ public class PlayerManager : Character
         {
             if(leftHitInfo.distance < footHeight)
             {
-                print("grounded");
+//                print("grounded");
                 return true;
             }
         }
@@ -460,20 +472,20 @@ public class PlayerManager : Character
         {
             if (rightHitInfo.distance < footHeight)
             {
-                print("grounded");
+//                print("grounded");
                 return true;
             }
         }
 
         #endregion
 
-        print("not grounded");
+//        print("not grounded");
         return false;
     }
 
     public void OnJump(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed)
+        if (active && callbackContext.performed)
         {
             if (!coyoteTimer.IsOver)
             {
@@ -485,7 +497,7 @@ public class PlayerManager : Character
 
     public void OnMenu(InputAction.CallbackContext callbackContext)
     {
-        if (callbackContext.performed)
+        if (active && callbackContext.performed)
         {
             if (GameManager.Instance.GameState == GameManager.State.PLAYER)
                 GameManager.Instance.GameState = GameManager.State.INVENTORY;
@@ -496,7 +508,7 @@ public class PlayerManager : Character
 
     public void OnGamepadZoom(InputAction.CallbackContext callbackContext)
     {
-        if (!callbackContext.performed) return;
+        if (!active || !callbackContext.performed) return;
 
         if(SmartCamera.activeCamera is FirstPersonCamera)
         {
@@ -539,7 +551,7 @@ public class PlayerManager : Character
 
     public void OnMouseZoom(InputAction.CallbackContext callbackContext)
     {
-        if (!callbackContext.performed) return;
+        if (!active || !callbackContext.performed) return;
 
         bool increase = callbackContext.ReadValue<Vector2>().y > 0;
 
@@ -585,7 +597,7 @@ public class PlayerManager : Character
                     playerData.inventory.activeWeapon.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
                 }
 
-                viewController.SetActive(false);
+                viewController.SetActive(true, UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly);
                 gameController.SetActive(true, UnityEngine.Rendering.ShadowCastingMode.On);
             }
             else

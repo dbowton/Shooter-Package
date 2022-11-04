@@ -8,9 +8,11 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class AI : Character
 {
-    public Transform playerTransform { get { return GameObject.Find("Player").transform; } }
-    public SimplePlayer player { get { return playerTransform.GetComponent<SimplePlayer>(); } }
-    public SimpleGameManager gameManager { get { return GameObject.Find("GameManager").GetComponent<SimpleGameManager>(); } }
+    public Transform playerTransform { get { return GameManager.Instance.player.transform; } }
+    public PlayerManager player { get { return GameManager.Instance.player; } }
+//    public SimpleGameManager gameManager { get { return GameObject.Find("GameManager").GetComponent<SimpleGameManager>(); } }
+        
+    
     //PlayerManager player { get { return GameManager.Instance.player; } }
     //Transform playerTransform { get { return player.transform; } }
 
@@ -19,12 +21,11 @@ public abstract class AI : Character
     public override void Die()
     {
         print("Dead");
-        Destroy(gameObject);
-
-/*        base.Die();
+        
+        base.Die();
         GameManager.Instance.ai.Remove(this);
-        animator.SetTrigger("death");
-        Destroy(this);*/
+//        animator.SetTrigger("death");
+        Destroy(this);
     }
 
 
@@ -110,7 +111,7 @@ public abstract class AI : Character
         minMoveDistance = controller.radius * 1.1f;
         SetTargetLocation(transform.position);
 
-        gameManager.ai.Add(this);
+        GameManager.Instance.ai.Add(this);
     }
 
     public override void update(float dt)
