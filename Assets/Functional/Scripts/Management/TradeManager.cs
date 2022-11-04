@@ -227,8 +227,6 @@ public class TradeManager : MonoBehaviour
         {
             if (traderValid < traderStart + showCount - ((otherIndex > 0 && otherIndex < otherInventory.Items.Count - 2) ? 1 : 0) && traderValid < otherInventory.Items.Count && traderValid >= 0)
             {
-                print("Requested: " + traderValid + " Max: " + otherInventory.Items.Count);
-
                 if (traderValid == otherIndex && !isPlayerManage)
                     otherInventoryScreen.text += "- " + otherInventory.Items[traderValid].Name + " -";
                 else

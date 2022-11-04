@@ -16,19 +16,12 @@ public class GameManager : Singleton<GameManager>
         GAMEOVER
     }
 
-    public override void Awake()
-    {
-        print("Started");
-        base.Awake();
-        print("base");
-
-    }
-
     public PlayerInput input;
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject tradeScreenPrefab;
+//    [SerializeField] private GameObject tradeScreenPrefab;
     [SerializeField] private GameObject inventoryScreenPrefab;
+    [SerializeField] private TMPro.TMP_Text gameTimeText;
 
     [HideInInspector] public PlayerManager player;
     private TradeManager tradeManager;
@@ -47,13 +40,6 @@ public class GameManager : Singleton<GameManager>
             {
                 playerPrefab = null;
                 Debug.LogError("PlayerPrefab Must Contain the PLAYER script");
-            }
-
-        if (tradeScreenPrefab != null)
-            if (!tradeScreenPrefab.TryGetComponent<TradeManager>(out _))
-            {
-                tradeScreenPrefab = null;
-                Debug.LogError("TradeScreenPrefab Must Contain the TradeManager script");
             }
     }
 
@@ -147,12 +133,19 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public float timeInDay = 600;
+
     private void Update()
     {
         gameTime += Time.deltaTime;
-        gameTime %= 2400;
 
-        print("Running");
+        if (Input.GetKeyDown(KeyCode.T)) gameTime += 15;
+
+        gameTime %= timeInDay;
+
+        gameTimeText.text = gameTime.ToString();
+
+//        print("Running");
         timers.ForEach(x => x.Update());
 
         switch (GameState)

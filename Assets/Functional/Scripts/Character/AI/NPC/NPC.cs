@@ -53,6 +53,10 @@ public class NPC : AI
                 isGoingToShop = false;
             }
         }
+        else if(!isActiveVendor && possibleLocations.Any(x => !x.interestReason.Equals(InterestReason.Shop)))
+        {
+            SetTargetLocation(possibleLocations.Where(x => !x.interestReason.Equals(InterestReason.Shop)).First().location.transform.position);
+        }
 
         if(possibleLocations.Count == 0)
         {

@@ -27,13 +27,11 @@ public class Singleton<T> : MonoBehaviour where T : Component
     {
         if (instance == null)
         {
-            print("Good Singleton");
             instance = this as T;
             DontDestroyOnLoad(this.gameObject);
         }
         else
         {
-            print("Bad Singleton");
             Destroy(gameObject);
         }
     }

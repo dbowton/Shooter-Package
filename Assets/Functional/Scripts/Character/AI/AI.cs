@@ -20,12 +20,12 @@ public abstract class AI : Character
 
     public override void Die()
     {
-        print("Dead");
+        print(Name + " died");
         
         base.Die();
         GameManager.Instance.ai.Remove(this);
 //        animator.SetTrigger("death");
-        Destroy(this);
+        Destroy(gameObject);
     }
 
 
@@ -120,7 +120,7 @@ public abstract class AI : Character
         stateWatch.Update(dt);
         attackTimer.Update(dt);
         currentStateFunction.Invoke();
-        print(currentStateFunction.Method.Name);
+//        print(currentStateFunction.Method.Name);
 
         if (setPassive)
         {
@@ -189,7 +189,6 @@ public abstract class AI : Character
 
     protected virtual void HostileUpdate()
     {
-        print("Hostile");
         if (attackTimer.IsOver && Vector3.Distance(transform.position, playerTransform.position) <= attackRange)
         {
             attackTimer.Reset();
@@ -239,14 +238,13 @@ public abstract class AI : Character
     public override void Hit()
     {
         endFleeTime = stateWatch.GetElapsed + UnityEngine.Random.Range(MinEndFleeTime, MaxEndFleeTime);
-        print("Hit");
 
         base.Hit();
 
         //  random between hostile or fleeing
         if (currentStateFunction == FleeingUpdate)
         {
-            if (fleeHealth / health.MaxHealth > new Vector2(hostility, selfPreservation).normalized.x)
+            if (fleeHealth / health.MaxHealth < new Vector2(hostility, selfPreservation).normalized.x)
             {
                 ChangeState(HostileUpdate);
             }

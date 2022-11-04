@@ -978,7 +978,7 @@ MonoBehaviour:
   weapons:
   - {fileID: 1025345822465776184}
   startingItems: []
-  money: 1007.65
+  money: 100
 --- !u!1 &1025345822465776186
 GameObject:
   m_ObjectHideFlags: 0

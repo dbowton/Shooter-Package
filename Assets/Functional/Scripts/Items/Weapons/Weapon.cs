@@ -78,6 +78,6 @@ public abstract class Weapon : Item
             dmg += d.damage / ((d.duration > 0) ? d.duration : 1);
         }
 
-        return GetLowerType().ToString() + " DMG: " + dmg;
+        return GetLowerType().ToString() + " DMG: " + dmg + " Val: " + value;
     }
 }

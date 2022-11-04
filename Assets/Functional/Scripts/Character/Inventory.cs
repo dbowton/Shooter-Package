@@ -23,7 +23,6 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(Item item)
     {
-        print((isPlayer && (activeWeapon == null || activeWeapon is Fists) && item is Weapon));
         item.transform.parent = gameObject.transform;
 
         if (isPlayer && item is Weapon)

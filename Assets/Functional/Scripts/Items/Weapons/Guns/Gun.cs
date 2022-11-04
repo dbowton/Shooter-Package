@@ -62,8 +62,6 @@ public abstract class Gun : Weapon
     {
         base.Start();
 
-        print("hi");
-
         if (useCameraPort)
             viewPort = Camera.main.transform;
     }
@@ -240,7 +238,7 @@ public abstract class Gun : Weapon
 
             if (muzzle_flash)
             {
-                print("fired");
+//                print("fired");
                 GameObject flash = Instantiate(muzzle_flash, gunPort);
 
                 if (flash.TryGetComponent<ParticleSystem>(out ParticleSystem ps)) ps.Play();

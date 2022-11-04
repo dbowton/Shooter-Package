@@ -15,7 +15,7 @@ public abstract class BulletLogic : MonoBehaviour
 
     public void AddBullet(Transform start, Transform target = null)
     {
-        if (target) print(target.gameObject.name);
+//        if (target) print(target.gameObject.name);
 
         if(useVisualHit)
         {
