@@ -47,7 +47,6 @@ public class NPC : AI
         }
         else if(isGoingToShop)
         {
-            print("DIstance: " + Vector3.Distance(transform.position, agent.destination));
             if(Mathf.Pow(Vector3.Distance(transform.position, agent.destination),2) < (Mathf.Pow(controller.radius, 2) + Mathf.Pow(controller.height,2)))
             {
                 isActiveVendor = true;
