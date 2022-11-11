@@ -19,7 +19,6 @@ public class GameManager : Singleton<GameManager>
     public PlayerInput input;
 
     [SerializeField] private GameObject playerPrefab;
-//    [SerializeField] private GameObject tradeScreenPrefab;
     [SerializeField] private GameObject inventoryScreenPrefab;
     [SerializeField] private TMPro.TMP_Text gameTimeText;
 
@@ -211,5 +210,20 @@ public class GameManager : Singleton<GameManager>
     {
         if (callbackContext.performed)
             GameState = State.PLAYER;
+    }
+
+    [SerializeField] GameObject craftingUIPrefab;
+    private CraftingManager craftingUI;
+    public void OpenCrafting()
+    {
+        craftingUI = Instantiate(craftingUIPrefab).GetComponent<CraftingManager>();
+        craftingUI.SetUp(player.playerData.inventory.simpleItems);
+    }
+
+    public void EndCrafting()
+    {
+        GameState = State.PLAYER;
+        Destroy(craftingUI.gameObject);
+        craftingUI = null;
     }
 }

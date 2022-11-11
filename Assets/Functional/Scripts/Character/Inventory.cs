@@ -15,6 +15,8 @@ public class Inventory : MonoBehaviour
     public List<Item> startingItems = new List<Item>();
     public float money = 0f;
 
+    public List<SimpleItem> simpleItems = new List<SimpleItem>();
+
     private void Start()
     {
         items.Clear();
