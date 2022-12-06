@@ -6,6 +6,12 @@ public class SmartCamera : MonoBehaviour
 {
     public static List<CameraControl> cameras = new List<CameraControl>();
     public static CameraControl activeCamera;
+    public static Camera main;
+
+    private void Start()
+    {
+        main = Camera.main;
+    }
 
     private void Update()
     {

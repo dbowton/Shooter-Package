@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System;
 using UnityEngine;
 using HoaxGames;
+using System.Linq;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerManager : Character
@@ -26,7 +27,7 @@ public class PlayerManager : Character
         public float idleTime;
         public float coyoteTime;
 
-        public Inventory inventory;
+        public ComplexInventory inventory;
         [HideInInspector] public bool lockNeckRotation;
         [HideInInspector] public bool hitIdleMax;
 
@@ -97,7 +98,7 @@ public class PlayerManager : Character
         Vector3 workingRotation;
 
         //  adjusts neck-rotation based on active weapon type
-        if (playerData.inventory.activeWeapon && ((int)playerData.inventory.activeWeapon.weaponType != -1 || playerData.ads || playerData.fire))
+        if (playerData.inventory.activeWeapon != null && ((int)playerData.inventory.activeWeapon.weaponType != -1 || playerData.ads || playerData.fire))
         {
             playerData.rotation.y += playerData.neckRotation.y;
             playerData.neckRotation.y = 0;
@@ -152,7 +153,7 @@ public class PlayerManager : Character
 
         #region animator
 
-        if(playerData.inventory.activeWeapon)
+        if(playerData.inventory.activeWeapon != null)
         {
             gameController.animator.SetInteger("armed", (int)playerData.inventory.activeWeapon.weaponType);
             viewController.animator.SetInteger("armed", (int)playerData.inventory.activeWeapon.weaponType);
@@ -209,11 +210,92 @@ public class PlayerManager : Character
     public const float Gravity = -9.8f;
     float gravity = 0f;
 
+    PlayerUI playerUI;
+    [SerializeField] GameObject PlayerUIPrefab;
+    readonly float reloadTime = 0.334f;
+    float reloadTimer = 0;
+
+    [SerializeField] GameObject crossHair;
+
     public void Update()
     {
         health.active = active;
 
-        if (!active) return;
+        if (!active)
+        {
+            if (playerUI) Destroy(playerUI.gameObject);
+            playerUI = null;
+            return;
+        }
+        else
+        {
+            if(playerUI == null)
+            {
+                playerUI = Instantiate(PlayerUIPrefab).GetComponent<PlayerUI>();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Equals))
+        {
+            playerData.speed *= 1.1f;
+            playerData.maxSpeed *= 1.1f;
+        }
+        if (Input.GetKeyDown(KeyCode.Minus))
+        {
+            playerData.speed *= 0.9f;
+            playerData.maxSpeed *= 0.9f;
+        }
+
+        print(playerData.speed.magnitude);
+
+        if(playerData.inventory.activeWeapon != null && playerData.inventory.activeWeapon is GunData)
+        {
+            crossHair.SetActive(true);
+            crossHair.transform.position = SmartCamera.main.transform.position + SmartCamera.main.transform.forward;
+        }
+        else
+        {
+            crossHair.SetActive(false);
+        }
+
+        playerUI.healthInfo.text = (health.CurrentHealth + " / " + health.MaxHealth).ToString();
+        playerUI.healthSlider.value = health.CurrentHealth / health.MaxHealth;
+       
+        string weaponDefault = "";
+        if(playerData.inventory.activeWeapon is GunData)
+        {
+            if ((playerData.inventory.activeWeapon as GunData).IsReloading)
+            {
+                if(string.IsNullOrWhiteSpace(playerUI.bulletInfo.text))
+                {
+                    weaponDefault += "\u221E";
+                }
+                else
+                {
+                    reloadTimer += Time.deltaTime;
+                    if(reloadTimer >= reloadTime)
+                    {
+                        reloadTimer -= reloadTime;
+                        weaponDefault += ('8'.Equals(playerUI.bulletInfo.text[0])) ? "\u221E" : "8";
+                    }
+                    else
+                    {
+                        if (playerUI.bulletInfo.text[0].Equals('8') || playerUI.bulletInfo.text[0].Equals("\u221E")) weaponDefault += playerUI.bulletInfo.text[0];
+                        else weaponDefault += "\u221E";
+                    }
+                }
+            }
+            else
+                weaponDefault += (playerData.inventory.activeWeapon as GunData).RoundsRemaining;
+
+            weaponDefault += " / " + (playerData.inventory.activeWeapon as GunData).MagCapacity;
+            weaponDefault += "\n" + (playerData.inventory.activeWeapon as GunData).AmmoCount;
+        }
+
+        playerUI.bulletInfo.text = weaponDefault;
+
+
+        if (Input.GetKeyDown(KeyCode.K)) GameManager.Instance.OpenCrafting();
 
         float dt = Time.deltaTime;
         base.update(dt);
@@ -371,8 +453,8 @@ public class PlayerManager : Character
     {
         if (!active) return;
         if (callbackContext.performed)
-            if (playerData.inventory.activeWeapon is Gun) 
-                (playerData.inventory.activeWeapon as Gun).Reload();
+            if (playerData.inventory.activeWeapon is GunData) 
+                (playerData.inventory.activeWeapon as GunData).Reload();
     }
 
     public void OnEquip(InputAction.CallbackContext callbackContext)
@@ -380,30 +462,28 @@ public class PlayerManager : Character
         if (!active) return;
         if (callbackContext.performed)
         {
-            if(playerData.inventory.activeWeapon)
+            if(playerData.inventory.activeWeapon != null)
             {
-                playerData.inventory.weapons.Add(playerData.inventory.activeWeapon);
-
-                playerData.inventory.activeWeapon.gameObject.SetActive(false);
-                
-                playerData.inventory.activeWeapon.transform.parent = playerData.inventory.gameObject.transform;
+                Destroy(playerData.inventory.activeWeapon.spawnedObject);
+                playerData.inventory.activeWeapon = null;
             }
 
-            if (playerData.inventory.weapons.Count == 0) return;
+            playerData.inventory.weaponIndex++;
+            if (playerData.inventory.weaponIndex >= playerData.inventory.Weapons.Count) playerData.inventory.weaponIndex = 0;
 
-            playerData.inventory.activeWeapon = playerData.inventory.weapons[0];
-            playerData.inventory.weapons.RemoveAt(0);
+            if (playerData.inventory.Weapons.Count == 0) return;
+            playerData.inventory.activeWeapon = playerData.inventory.Weapons[playerData.inventory.weaponIndex];
+            playerData.inventory.activeWeapon.spawnedObject = Instantiate(playerData.inventory.activeWeapon.itemPrefab);
 
-            playerData.inventory.activeWeapon.gameObject.SetActive(true);
+            playerData.inventory.activeWeapon.Start();
 
-
-            if(SmartCamera.activeCamera is FirstPersonCamera)
-                playerData.inventory.activeWeapon.transform.parent = viewController.animator.GetBoneTransform(HumanBodyBones.RightHand);
+            if (SmartCamera.activeCamera is FirstPersonCamera)
+                playerData.inventory.activeWeapon.spawnedObject.transform.parent = viewController.animator.GetBoneTransform(HumanBodyBones.RightHand);
             else
-                playerData.inventory.activeWeapon.transform.parent = gameController.animator.GetBoneTransform(HumanBodyBones.RightHand);
+                playerData.inventory.activeWeapon.spawnedObject.transform.parent = gameController.animator.GetBoneTransform(HumanBodyBones.RightHand);
 
-            playerData.inventory.activeWeapon.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
-            playerData.inventory.activeWeapon.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
+            playerData.inventory.activeWeapon.spawnedObject.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
+            playerData.inventory.activeWeapon.spawnedObject.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
             playerData.inventory.activeWeapon.owner = this;
         }
     }
@@ -515,11 +595,11 @@ public class PlayerManager : Character
             thirdPersonCamera.SetActive();
             thirdPersonCamera.outerOffsetWeight = 0;
 
-            if (playerData.inventory.activeWeapon)
+            if (playerData.inventory.activeWeapon != null)
             {
-                playerData.inventory.activeWeapon.transform.parent = gameController.animator.GetBoneTransform(HumanBodyBones.RightHand);
-                playerData.inventory.activeWeapon.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
-                playerData.inventory.activeWeapon.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
+                playerData.inventory.activeWeapon.spawnedObject.transform.parent = gameController.animator.GetBoneTransform(HumanBodyBones.RightHand);
+                playerData.inventory.activeWeapon.spawnedObject.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
+                playerData.inventory.activeWeapon.spawnedObject.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
             }
 
             viewController.SetActive(true, UnityEngine.Rendering.ShadowCastingMode.Off);
@@ -536,11 +616,11 @@ public class PlayerManager : Character
                 thirdPersonCamera.outerOffsetWeight = 0;
                 firstPersonCamera.SetActive();
 
-                if (playerData.inventory.activeWeapon)
+                if (playerData.inventory.activeWeapon != null)
                 {
-                    playerData.inventory.activeWeapon.transform.parent = viewController.animator.GetBoneTransform(HumanBodyBones.RightHand);
-                    playerData.inventory.activeWeapon.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
-                    playerData.inventory.activeWeapon.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
+                    playerData.inventory.activeWeapon.spawnedObject.transform.parent = viewController.animator.GetBoneTransform(HumanBodyBones.RightHand);
+                    playerData.inventory.activeWeapon.spawnedObject.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
+                    playerData.inventory.activeWeapon.spawnedObject.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
                 }
 
                 viewController.SetActive(true);
@@ -568,11 +648,11 @@ public class PlayerManager : Character
 
                     firstPersonCamera.SetActive();
 
-                    if(playerData.inventory.activeWeapon)
+                    if(playerData.inventory.activeWeapon != null)
                     {
-                        playerData.inventory.activeWeapon.transform.parent = viewController.animator.GetBoneTransform(HumanBodyBones.RightHand);
-                        playerData.inventory.activeWeapon.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
-                        playerData.inventory.activeWeapon.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
+                        playerData.inventory.activeWeapon.spawnedObject.transform.parent = viewController.animator.GetBoneTransform(HumanBodyBones.RightHand);
+                        playerData.inventory.activeWeapon.spawnedObject.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
+                        playerData.inventory.activeWeapon.spawnedObject.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
                     }
 
                     viewController.SetActive(true);
@@ -590,11 +670,11 @@ public class PlayerManager : Character
             {
                 thirdPersonCamera.SetActive();
 
-                if (playerData.inventory.activeWeapon)
+                if (playerData.inventory.activeWeapon != null)
                 {
-                    playerData.inventory.activeWeapon.transform.parent = gameController.animator.GetBoneTransform(HumanBodyBones.RightHand);
-                    playerData.inventory.activeWeapon.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
-                    playerData.inventory.activeWeapon.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
+                    playerData.inventory.activeWeapon.spawnedObject.transform.parent = gameController.animator.GetBoneTransform(HumanBodyBones.RightHand);
+                    playerData.inventory.activeWeapon.spawnedObject.transform.localPosition = playerData.inventory.activeWeapon.posOffset;
+                    playerData.inventory.activeWeapon.spawnedObject.transform.localEulerAngles = playerData.inventory.activeWeapon.rotOffset;
                 }
 
                 viewController.SetActive(true, UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly);

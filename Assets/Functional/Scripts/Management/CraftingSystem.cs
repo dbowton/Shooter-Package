@@ -4,43 +4,90 @@ using System.Linq;
 using UnityEngine;
 using static SimpleItem;
 
-public class CraftingSystem : Singleton<CraftingSystem>
+public static class CraftingSystem
 {
     [System.Serializable]
     public class CraftingMaterial
     {
-        public SimpleItem item;
-        public int count;
+        public MiscData.ItemID resource;
+        public int requiredAmount;
     }
 
-    [System.Serializable]
-    public class CraftingRecipe
+    [System.Serializable] public abstract class CraftingRecipe 
     {
         public List<CraftingMaterial> requiredMaterials = new List<CraftingMaterial>();
-        public CraftingMaterial outputMaterial;
+        public abstract ItemData GetOutput();
     }
 
-    public List<CraftingRecipe> craftingRecipes = new List<CraftingRecipe>();
-
-    public bool CraftItem(Inventory inventory, ItemId desiredItem)
+    #region Gun Recipes
+    [System.Serializable]
+    public class FullAutoRecipe : CraftingRecipe
     {
-        CraftingRecipe recipe = craftingRecipes.Find(x => x.outputMaterial.item.Equals(desiredItem));
+        public FullAutoData outputMaterial;
 
-        List<SimpleItem> usedItems = new List<SimpleItem>();
-
-        foreach (var material in recipe.requiredMaterials)
+        public override ItemData GetOutput()
         {
-            if (inventory.simpleItems.Where(x => x.id.Equals(material.item.id)).Count() < material.count) return false;
-            else usedItems.AddRange(inventory.simpleItems.Where(x => x.id.Equals(material.item.id)).ToList().GetRange(0, material.count));
+            return outputMaterial;
+        }
+    }
+    [System.Serializable]
+    public class SemiAutoRecipe : CraftingRecipe
+    {
+        public SemiAutoData outputMaterial;
+        public override ItemData GetOutput()
+        {
+            return outputMaterial;
+        }
+    }
+    [System.Serializable]
+    public class BurstRecipe : CraftingRecipe
+    {
+        public BurstData outputMaterial;
+        public override ItemData GetOutput()
+        {
+            return outputMaterial;
+        }
+    }
+    [System.Serializable]
+    public class ChargeRecipe : CraftingRecipe
+    {
+        public ChargeData outputMaterial;
+        public override ItemData GetOutput()
+        {
+            return outputMaterial;
+        }
+    }
+    #endregion
+
+    public static bool CraftItem(ComplexInventory inventory, CraftingRecipe recipe)
+    {
+        List<MiscData> requiredItems = new List<MiscData>();
+
+        if (!CanCraftItem(inventory, recipe)) return false;
+
+        foreach(var item in recipe.requiredMaterials)
+        {
+            int workingCount = 0;
+            while(workingCount < item.requiredAmount)
+            {
+                ItemData usedItem = inventory.items.First(x => x is MiscData && (x as MiscData).craftingID.Equals(item.resource));
+                workingCount += (usedItem as MiscData).craftingCount;
+                inventory.items.Remove(usedItem);
+            }
         }
 
-        foreach (var usedItem in usedItems)
-        {
-            inventory.simpleItems.Remove(usedItem);
-        }
+        inventory.items.Add(recipe.GetOutput());
+        return true;
+    }
 
-        for (int i = 0; i < recipe.outputMaterial.count; i++)
-            inventory.simpleItems.Add(recipe.outputMaterial.item);
+    public static bool CanCraftItem(ComplexInventory inventory, CraftingRecipe recipe)
+    {
+        List<MiscData> requiredItems = new List<MiscData>();
+
+        foreach (var item in recipe.requiredMaterials)
+        {
+            if (inventory.items.Where(x => (x is MiscData) && (x as MiscData).craftingID.Equals(item.resource)).Sum(x => (x as MiscData).craftingCount) < item.requiredAmount) return false;
+        }
 
         return true;
     }

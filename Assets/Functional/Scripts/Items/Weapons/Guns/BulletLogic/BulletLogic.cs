@@ -6,10 +6,10 @@ public abstract class BulletLogic : MonoBehaviour
 {
     public bool useVisualHit = false;
     public GameObject projectilePrefab;
-    public AudioSource hitSound;
+    public AudioClip hitSound;
     public float speed;
     public float projectileTime;
-    public abstract void GenerateHits(Transform origin, Vector3 baseDirection, float range, Weapon.DelegatedDamage action, Transform gunPort = null);
+    public abstract void GenerateHits(Transform origin, Vector3 baseDirection, float range, WeaponData.DelegatedDamage action, Transform gunPort = null);
 
     List<(GameObject bullet, float destructionTime, Transform target)> bullets = new List<(GameObject bullet, float destructionTime, Transform target)>();
 

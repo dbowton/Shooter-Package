@@ -17,7 +17,7 @@ public class Projectile : BulletLogic
     [SerializeField] float hitRange;
     [SerializeField] float damageRange;
     [SerializeField] float pushBack;
-    Weapon.DelegatedDamage action;
+    WeaponData.DelegatedDamage action;
 
     private void OnValidate()
     {
@@ -43,7 +43,7 @@ public class Projectile : BulletLogic
         public float projectileTimer;
     }
 
-    public override void GenerateHits(Transform origin, Vector3 baseDirection, float range, Weapon.DelegatedDamage action, Transform gunPort = null)
+    public override void GenerateHits(Transform origin, Vector3 baseDirection, float range, WeaponData.DelegatedDamage action, Transform gunPort = null)
     {
         this.action = action;
 
@@ -70,7 +70,7 @@ public class Projectile : BulletLogic
                 List<Collider> hits = Physics.OverlapSphere(projectiles[i].hitPoint.transform.position, damageRange).ToList();
                 
                 if(hitSound)
-                    AudioSource.PlayClipAtPoint(hitSound.clip, projectiles[i].projectile.transform.position, hitSound.volume);
+                    AudioSource.PlayClipAtPoint(hitSound, projectiles[i].projectile.transform.position);
 
                 if (isAOE)
                 {

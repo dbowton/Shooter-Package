@@ -6,6 +6,8 @@ public class GameManager : Singleton<GameManager>
 {
     public float gameTime = 0f;
 
+    public CraftingManager crafting;
+
     public enum State
     {
         TITLE,
@@ -205,25 +207,23 @@ public class GameManager : Singleton<GameManager>
         activeTradeManager = null;
     }
 
-
     public void OnInventoryReturn(InputAction.CallbackContext callbackContext)
     {
         if (callbackContext.performed)
             GameState = State.PLAYER;
     }
 
-    [SerializeField] GameObject craftingUIPrefab;
-    private CraftingManager craftingUI;
+
+    [SerializeField] CraftingManager craftingManager;
     public void OpenCrafting()
     {
-        craftingUI = Instantiate(craftingUIPrefab).GetComponent<CraftingManager>();
-        craftingUI.SetUp(player.playerData.inventory.simpleItems);
+        GameState = State.INVENTORY;
+        craftingManager.SetUp(player.playerData.inventory);
     }
 
     public void EndCrafting()
     {
         GameState = State.PLAYER;
-        Destroy(craftingUI.gameObject);
-        craftingUI = null;
+        craftingManager.ShutDown();
     }
 }

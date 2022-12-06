@@ -47,7 +47,7 @@ public class Health : MonoBehaviour
 
     public void Damage(Damage damage, float dmgMulti = 1)
     {
-        if(gameObject.transform.root.TryGetComponent<Character>(out Character character)) character.Hit();
+        if(gameObject.transform.TryGetComponent<Character>(out Character character)) character.Hit();
 
         damage.damage *= dmgMulti;
 
@@ -85,7 +85,7 @@ public class Health : MonoBehaviour
         }
             
           
-        if(killRootCharacter && gameObject.transform.root.TryGetComponent<Character>(out Character character)) character.Die();
+        if(killRootCharacter && transform.TryGetComponent<Character>(out Character character)) character.Die();
         if (destroyOnDeath) Destroy(gameObject, killTimer);
     }
 }

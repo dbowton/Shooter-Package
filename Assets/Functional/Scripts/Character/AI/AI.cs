@@ -184,7 +184,7 @@ public abstract class AI : Character
 
     protected virtual void CuriousUpdate()
     {
-        print("curious");
+
     }
 
     protected virtual void HostileUpdate()
@@ -254,6 +254,8 @@ public abstract class AI : Character
 
         Action newState = (UnityEngine.Random.Range(0f, 1f) < new Vector2(selfPreservation, hostility).normalized.x) ? FleeingUpdate : HostileUpdate;
         if (newState != currentStateFunction) ChangeState(newState);
+
+        print(newState.Method.Name);
     }
 
     // Simple only checks based on player pos not all of the player

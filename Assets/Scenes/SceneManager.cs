@@ -52,6 +52,8 @@ public class SceneManager : Singleton<SceneManager>
             string name = path.Substring(slash + 1);
             int dot = name.LastIndexOf('.');
 
+            print(name.Substring(0, dot) + " " + newScene);
+
             if(name.Substring(0, dot).Equals(newScene))
             {
                 validScene = true;

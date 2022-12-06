@@ -69,7 +69,6 @@ public abstract class Weapon : Item
     }
 
     public abstract System.Type GetLowerType();
-
     public override string GetDesc()
     {
         float dmg = 0;

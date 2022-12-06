@@ -175,6 +175,8 @@ public abstract class Gun : Weapon
         reloadTimer = reloadTime;
     }
 
+    public bool IsReloading { get { return reloadTimer <= 0; } }
+
     public override void update(bool pressed)
     {
         if (pressed) Pressed();
@@ -248,7 +250,7 @@ public abstract class Gun : Weapon
 
             roundsRemaining--;
 
-            bulletLogic.GenerateHits(viewPort, dir, maxRange, damage, gunPort);
+//            bulletLogic.GenerateHits(viewPort, dir, maxRange, damage, gunPort);
         }
         else
         {

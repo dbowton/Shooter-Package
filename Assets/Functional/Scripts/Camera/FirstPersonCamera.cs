@@ -29,13 +29,13 @@ public class FirstPersonCamera : CameraControl
         averageRotation.x = rotations.Sum(x => x.x) / rotations.Count;
         averageRotation.y = rotations.Sum(x => x.y) / rotations.Count;
 
-        Camera.main.gameObject.transform.localEulerAngles = averageRotation + angleOffset;
+        SmartCamera.main.gameObject.transform.localEulerAngles = averageRotation + angleOffset;
 
-        Vector3 posOffset = (Camera.main.gameObject.transform.right * offset.x) + 
-                            (Camera.main.gameObject.transform.up * offset.y) + 
-                            (Camera.main.gameObject.transform.forward * offset.z);
+        Vector3 posOffset = (SmartCamera.main.gameObject.transform.right * offset.x) + 
+                            (SmartCamera.main.gameObject.transform.up * offset.y) + 
+                            (SmartCamera.main.gameObject.transform.forward * offset.z);
 
-        Camera.main.gameObject.transform.position = playerHead.position;
-        Camera.main.gameObject.transform.localPosition += posOffset;
+        SmartCamera.main.gameObject.transform.position = playerHead.position;
+        SmartCamera.main.gameObject.transform.localPosition += posOffset;
     }
 }

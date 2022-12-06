@@ -22,7 +22,7 @@ public class BuckShot : BulletLogic
             stdPelletDeviation = new Vector2(Mathf.Abs(stdPelletDeviation.x), Mathf.Abs(stdPelletDeviation.y));
     }
 
-    public override void GenerateHits(Transform origin, Vector3 baseDirection, float range, Weapon.DelegatedDamage action, Transform gunPort = null)
+    public override void GenerateHits(Transform origin, Vector3 baseDirection, float range, WeaponData.DelegatedDamage action, Transform gunPort = null)
     {
         if (gunPort == null) gunPort = origin;
 

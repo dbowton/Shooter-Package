@@ -37,8 +37,8 @@ public class TradeManager : MonoBehaviour
     private float heldTime = 0.5f;
     private float heldReduction = 0.75f;
 
-    private Inventory playerInventory;
-    private Inventory otherInventory;
+    private ComplexInventory playerInventory;
+    private ComplexInventory otherInventory;
     
     private void Start()
     {
@@ -102,7 +102,7 @@ public class TradeManager : MonoBehaviour
             {
                 if (isPlayerManage)
                 {
-                    if (playerIndex < playerInventory.Items.Count - 1)
+                    if (playerIndex < playerInventory.items.Count - 1)
                     {
                         playerIndex++;
                         DisplayChange();
@@ -110,7 +110,7 @@ public class TradeManager : MonoBehaviour
                 }
                 else
                 {
-                    if (otherIndex < otherInventory.Items.Count - 1)
+                    if (otherIndex < otherInventory.items.Count - 1)
                     {
                         otherIndex++;
                         DisplayChange();
@@ -151,15 +151,15 @@ public class TradeManager : MonoBehaviour
                 {
                     // sell item to trader
 
-                    if(playerIndex >= 0 && playerIndex < playerInventory.Items.Count)
+                    if(playerIndex >= 0 && playerIndex < playerInventory.items.Count)
                     {
-                        Item soldItem = playerInventory.Items[playerIndex];
+                        ItemData soldItem = playerInventory.items[playerIndex];
                         if (otherInventory.money >= soldItem.Value)
                         {
                             playerInventory.money += soldItem.Value;
                             otherInventory.money -= soldItem.Value;
-                            playerInventory.Items.Remove(soldItem);
-                            otherInventory.AddItem(soldItem);
+                            playerInventory.items.Remove(soldItem);
+                            otherInventory.items.Add(soldItem);
                             DisplayChange();
                         }
                         else
@@ -167,21 +167,21 @@ public class TradeManager : MonoBehaviour
                             print(tradersName + " cannot afford to buy " + soldItem.Name + " for " + soldItem.Value);
                         }
 
-                        if (playerIndex > playerInventory.Items.Count - 1) playerIndex = playerInventory.Items.Count - 1;
+                        if (playerIndex > playerInventory.items.Count - 1) playerIndex = playerInventory.items.Count - 1;
                     }
                 }
                 else
                 {
                     // buy item from trader
-                    if (otherIndex >= 0 && otherIndex < otherInventory.Items.Count)
+                    if (otherIndex >= 0 && otherIndex < otherInventory.items.Count)
                     {
-                        Item boughtItem = otherInventory.Items[otherIndex];
+                        ItemData boughtItem = otherInventory.items[otherIndex];
                         if(playerInventory.money >= boughtItem.Value)
                         {
                             playerInventory.money -= boughtItem.Value;
                             otherInventory.money += boughtItem.Value;
-                            playerInventory.AddItem(boughtItem);
-                            otherInventory.Items.Remove(boughtItem);
+                            playerInventory.items.Add(boughtItem);
+                            otherInventory.items.Remove(boughtItem);
                             DisplayChange();
                         }
                         else
@@ -189,7 +189,7 @@ public class TradeManager : MonoBehaviour
                             print("You cannot afford to buy " + boughtItem.Name + " for " + boughtItem.Value);
                         }
 
-                        if (otherIndex > otherInventory.Items.Count - 1) otherIndex = otherInventory.Items.Count - 1;
+                        if (otherIndex > otherInventory.items.Count - 1) otherIndex = otherInventory.items.Count - 1;
                     }
                 }
 
@@ -200,12 +200,10 @@ public class TradeManager : MonoBehaviour
 
         //  exit trade
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.T))
             {
                 GameManager.Instance.EndTrade();
-//                GameObject.Find("GameManager").GetComponent<SimpleGameManager>().EndTrade();
                 Destroy(centerDisplayObject);
-                //GameManager.Instance.GameState = GameManager.State.PLAYER;
             }
         }
         #endregion
@@ -221,16 +219,16 @@ public class TradeManager : MonoBehaviour
 
         otherInventoryScreen.text = "";
 
-        int traderStart = Mathf.Min(otherIndex, Mathf.Max(otherInventory.Items.Count - showCount, 0));
-        int traderValid = Mathf.Max((otherIndex > 0 && otherIndex < otherInventory.Items.Count - 2) ? traderStart - 1 : traderStart, 0);
+        int traderStart = Mathf.Min(otherIndex, Mathf.Max(otherInventory.items.Count - showCount, 0));
+        int traderValid = Mathf.Max((otherIndex > 0 && otherIndex < otherInventory.items.Count - 2) ? traderStart - 1 : traderStart, 0);
         for (int i = 0; i < showCount; i++, traderValid++)
         {
-            if (traderValid < traderStart + showCount - ((otherIndex > 0 && otherIndex < otherInventory.Items.Count - 2) ? 1 : 0) && traderValid < otherInventory.Items.Count && traderValid >= 0)
+            if (traderValid < traderStart + showCount - ((otherIndex > 0 && otherIndex < otherInventory.items.Count - 2) ? 1 : 0) && traderValid < otherInventory.items.Count && traderValid >= 0)
             {
                 if (traderValid == otherIndex && !isPlayerManage)
-                    otherInventoryScreen.text += "- " + otherInventory.Items[traderValid].Name + " -";
+                    otherInventoryScreen.text += "- " + otherInventory.items[traderValid].Name + " -";
                 else
-                    otherInventoryScreen.text += otherInventory.Items[traderValid].Name;
+                    otherInventoryScreen.text += otherInventory.items[traderValid].Name;
             }
 
             otherInventoryScreen.text += "\n";
@@ -244,16 +242,16 @@ public class TradeManager : MonoBehaviour
 
         playerInventoryScreen.text = "";
 
-        int playerStart = Mathf.Min(playerIndex, Mathf.Max(playerInventory.Items.Count - showCount, 0));
-        int playerValid = Mathf.Max((playerIndex > 0 && playerIndex < playerInventory.Items.Count - 2) ? playerStart - 1 : playerStart, 0);
+        int playerStart = Mathf.Min(playerIndex, Mathf.Max(playerInventory.items.Count - showCount, 0));
+        int playerValid = Mathf.Max((playerIndex > 0 && playerIndex < playerInventory.items.Count - 2) ? playerStart - 1 : playerStart, 0);
         for (int i = 0; i < showCount; i++, playerValid++)
         {
-            if (playerValid < playerStart + showCount - ((playerIndex > 0 && playerIndex < playerInventory.Items.Count - 2) ? 1 : 0) && playerValid < playerInventory.Items.Count && playerValid >= 0)
+            if (playerValid < playerStart + showCount - ((playerIndex > 0 && playerIndex < playerInventory.items.Count - 2) ? 1 : 0) && playerValid < playerInventory.items.Count && playerValid >= 0)
             {
                 if (playerValid == playerIndex && isPlayerManage)
-                    playerInventoryScreen.text += "- " + playerInventory.Items[playerValid].Name + " -";
+                    playerInventoryScreen.text += "- " + playerInventory.items[playerValid].Name + " -";
                 else
-                    playerInventoryScreen.text += playerInventory.Items[playerValid].Name;
+                    playerInventoryScreen.text += playerInventory.items[playerValid].Name;
             }
 
             playerInventoryScreen.text += "\n";
@@ -264,33 +262,18 @@ public class TradeManager : MonoBehaviour
         Destroy(centerDisplayObject);
         if(isPlayerManage)
         {
-            if(playerIndex >= 0 && playerIndex < playerInventory.Items.Count)
+            if(playerIndex >= 0 && playerIndex < playerInventory.items.Count)
             {
-                itemDescription.text = playerInventory.Items[playerIndex].GetDesc();
-
-/*                if (testCase)
-                {
-                    Vector3 pos = Camera.main.transform.position + Camera.main.transform.forward * 3;
-                    centerDisplayObject = Instantiate(playerInventory.items[playerIndex].visualPrefab);
-                    centerDisplayObject.transform.position = pos;
-                    centerDisplayObject.GetComponent<Renderer>().material.color = displayObjectColor;
-                }*/
+                itemDescription.text = playerInventory.items[playerIndex].GetDesc();
 
             }
         }
         else
         {
-            if (otherIndex >= 0 && otherIndex < otherInventory.Items.Count)
+            if (otherIndex >= 0 && otherIndex < otherInventory.items.Count)
             {
-                itemDescription.text = otherInventory.Items[otherIndex].GetDesc();
+                itemDescription.text = otherInventory.items[otherIndex].GetDesc();
 
-/*                if(testCase)
-                {
-                    centerDisplayObject = Instantiate(otherInventory.items[otherIndex].visualPrefab);
-                    Vector3 pos = Camera.main.transform.position + Camera.main.transform.forward * 3;
-                    centerDisplayObject.transform.position = pos;
-                    centerDisplayObject.GetComponent<Renderer>().material.color = displayObjectColor;
-                }*/
             }
         }
 

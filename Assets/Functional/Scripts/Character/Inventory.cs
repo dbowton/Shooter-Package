@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+/*public class Inventory : MonoBehaviour
 {
     [HideInInspector] public bool isPlayer = false;
     public Weapon activeWeapon;
@@ -33,4 +33,4 @@ public class Inventory : MonoBehaviour
         }
         else items.Add(item);
     }
-}
+}*/

@@ -9,7 +9,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent))]
 public class NPC : AI
 {
-    public Inventory inventory;
+    public ComplexInventory inventory;
     [SerializeField] [Tooltip("This allows a vendor w/out a shop")] bool isVendor;
     bool isActiveVendor = false;
     bool isGoingToShop = false;
@@ -35,7 +35,27 @@ public class NPC : AI
     public override void update(float dt)
     {
         base.update(dt);
+
+        if(agent.remainingDistance < 0.5f)
+        {
+            animator.SetFloat("Speed", 0);
+        }
+        else animator.SetFloat("Speed", 1);
+
+        int selected = 0;
+        if (prevSelected > 0) selected = 0;
+        else if(UnityEngine.Random.Range(0, 2) == 0)
+        {
+            selected = UnityEngine.Random.Range(0, 5);
+        }
+
+        if (isActiveVendor) selected = 0;
+
+        animator.SetInteger("ranNum", selected);
+        prevSelected = selected;
     }
+
+    int prevSelected;
 
     protected override void PassiveUpdate()
     {
@@ -66,8 +86,6 @@ public class NPC : AI
 
         if(isActiveVendor)
         {
-            //            (bool hit, RaycastHit hitInfo) lookingAt = player.LookingAt();
-            //            if (lookingAt.hit && lookingAt.hitInfo.collider.gameObject.Equals(gameObject))
             if (Vector3.Distance(transform.position, playerTransform.position) < 12)
             {
                 Vector3 lookAt = playerTransform.position;
@@ -76,19 +94,30 @@ public class NPC : AI
                 transform.LookAt(lookAt, Vector3.up);
             }
 
-            if (Vector3.Distance(transform.position, playerTransform.position) < 2)
+            if (Vector3.Distance(transform.position, playerTransform.position) < 2 &&
+                Physics.Raycast(SmartCamera.main.transform.position, SmartCamera.main.transform.forward, out RaycastHit hitInfo) &&
+                hitInfo.transform.root.gameObject.Equals(gameObject))
             {
                 print("x - trade");
+                if (interactObject == null) interactObject = Instantiate(interactPrefab);
 
-                if(Input.GetKeyDown(KeyCode.X))
+
+                if (Input.GetKeyDown(KeyCode.X))
                 {
-                    dialogueSystem.ReturnToConversation();
+                    dialogueSystem.StartConversation();
+                    Destroy(interactObject);
                 }
             }
+            else if (interactObject) Destroy(interactObject);
         }
+        else if (interactObject) Destroy(interactObject);
     }
 
-    [SerializeField] DialogueSystem dialogueSystem;
+    [SerializeField] GameObject interactPrefab;
+    GameObject interactObject;
+
+
+    [SerializeField] NewDialogueSystem dialogueSystem;
 
     public void BeginTrade()
     {
