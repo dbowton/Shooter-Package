@@ -132,6 +132,12 @@ MonoBehaviour:
       offset: {x: 55, y: 0, z: 30}
     - transform: {fileID: 1499959673290370574}
       offset: {x: -30, y: 40, z: -50}
+    - transform: {fileID: 3238942442362261810}
+      offset: {x: 41, y: 16.4, z: -40.4}
+    - transform: {fileID: 6294103176562557957}
+      offset: {x: -17.6, y: 8.31, z: -3.17}
+    - transform: {fileID: 5434562508528868752}
+      offset: {x: 22.56, y: 30.11, z: -1.14}
 --- !u!95 &118264001154313364
 Animator:
   serializedVersion: 4
@@ -1134,6 +1140,12 @@ MonoBehaviour:
       offset: {x: 55, y: 0, z: 30}
     - transform: {fileID: 1697696932866085337}
       offset: {x: -30, y: 40, z: -50}
+    - transform: {fileID: 3435274273211723493}
+      offset: {x: 41, y: 16.4, z: -40.4}
+    - transform: {fileID: 6054709544574630866}
+      offset: {x: -17.6, y: 8.31, z: -3.17}
+    - transform: {fileID: 5203050596665795143}
+      offset: {x: 22.56, y: 30.11, z: -1.14}
 --- !u!95 &4016114032194815897
 Animator:
   serializedVersion: 4

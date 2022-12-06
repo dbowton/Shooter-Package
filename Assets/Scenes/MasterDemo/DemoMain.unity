@@ -449,8 +449,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 138294493}
-  - component: {fileID: 138294492}
-  - component: {fileID: 138294491}
   - component: {fileID: 138294490}
   - component: {fileID: 138294489}
   - component: {fileID: 138294488}
@@ -460,6 +458,7 @@ GameObject:
   - component: {fileID: 138294499}
   - component: {fileID: 138294501}
   - component: {fileID: 138294500}
+  - component: {fileID: 138294502}
   m_Layer: 0
   m_Name: Gunsmith
   m_TagString: Untagged
@@ -599,56 +598,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &138294491
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138294484}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &138294492
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138294484}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &138294493
 Transform:
   m_ObjectHideFlags: 0
@@ -835,30 +784,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdee23dcfce945d499bbc4e723cdc94c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prompt: trade
-  voicePrompt: {fileID: 8300000, guid: 61a27392c9f08b64cb272c8c2043e9e8, type: 3}
+  prompt: 'Nice to Meet you. The names Frank. '
+  voicePrompt: {fileID: 8300000, guid: be6ca61ddac70fa46b9328ce3b29e565, type: 3}
   voicePromptVolume: 1
   allowInterupts: 1
   isReturningPoint: 0
   options:
-  - textResponse: Trade
+  - textResponse: So, what do you do here?
     action:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 138294487}
-          m_TargetAssemblyTypeName: NPC, Assembly-CSharp
-          m_MethodName: BeginTrade
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
+    nextConversation: {fileID: 138294502}
+    voiceResponse: {fileID: 8300000, guid: c5dc3e7c1a0a20e48959c959cd0b3589, type: 3}
+    voiceResponseVolume: 0
+  - textResponse: Good to meet you, but I need to go.
+    action:
+      m_PersistentCalls:
+        m_Calls: []
     nextConversation: {fileID: 0}
-    voiceResponse: {fileID: 0}
+    voiceResponse: {fileID: 8300000, guid: a6762cefd14db784ca7132e3dc8259d8, type: 3}
     voiceResponseVolume: 0
 --- !u!114 &138294501
 MonoBehaviour:
@@ -880,6 +824,50 @@ MonoBehaviour:
   - {fileID: 6180156358842426582, guid: 78a444b69347a5b46a5839855ca9dbde, type: 3}
   - {fileID: 7391341429088962815, guid: 461a03f9ceb19274fadf05ec7b8fe578, type: 3}
   optionKeyCodes: 31000000320000003300000034000000
+--- !u!114 &138294502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138294484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdee23dcfce945d499bbc4e723cdc94c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prompt: I sell weapons, are you interested?
+  voicePrompt: {fileID: 8300000, guid: e5b3304870eb3304c8bdfdce16be2a5f, type: 3}
+  voicePromptVolume: 1
+  allowInterupts: 0
+  isReturningPoint: 0
+  options:
+  - textResponse: Yes, Let's trade.
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 138294487}
+          m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+          m_MethodName: BeginTrade
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    nextConversation: {fileID: 0}
+    voiceResponse: {fileID: 8300000, guid: bee1cd9052d3181498de36ee2674d825, type: 3}
+    voiceResponseVolume: 1
+  - textResponse: No, thanks. I need to get going.
+    action:
+      m_PersistentCalls:
+        m_Calls: []
+    nextConversation: {fileID: 0}
+    voiceResponse: {fileID: 8300000, guid: b566b8b4a932ba947850a2e8ca30e6d7, type: 3}
+    voiceResponseVolume: 1
 --- !u!1001 &147430729
 PrefabInstance:
   m_ObjectHideFlags: 0
