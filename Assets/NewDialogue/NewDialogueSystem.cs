@@ -30,6 +30,9 @@ public class NewDialogueSystem : MonoBehaviour
     private void BeginConversation()
     {
         active = false;
+        charCount = 0;
+        timeAccumulation = 0;
+
 
         queued = false;
         if(currentUI) Destroy(currentUI.gameObject);

@@ -762,14 +762,14 @@ MonoBehaviour:
     Name: Weapons Cache
     Value: 10
     craftingID: 3
-    craftingCount: 100
+    craftingCount: 250
   - itemPrefab: {fileID: 0}
     spawnedObject: {fileID: 0}
     itemIcon: {fileID: 0}
     Name: Wood Pallet
     Value: 5
     craftingID: 0
-    craftingCount: 20
+    craftingCount: 100
   money: 999
   weaponIndex: 0
 --- !u!114 &138294500
@@ -3801,43 +3801,43 @@ MonoBehaviour:
       reloadedSound: {fileID: 8300000, guid: 61a27392c9f08b64cb272c8c2043e9e8, type: 3}
       muzzle_flash_time: 0
       usePrefabForFireable: 0
+  semiAutoRecipes:
   - requiredMaterials:
     - resource: 3
-      requiredAmount: 15
+      requiredAmount: 200
     - resource: 0
-      requiredAmount: 4
+      requiredAmount: 50
     outputMaterial:
-      itemPrefab: {fileID: 8518512363889389045, guid: ea619151c5d2250438ed6ee9bbbadfed, type: 3}
+      itemPrefab: {fileID: 4078921450950079831, guid: bcef73b9954f88d4a88f403a6867cd40, type: 3}
       spawnedObject: {fileID: 0}
-      itemIcon: {fileID: 21300046, guid: 0bd96f6f4899f644ea1ffd9b4735a5e6, type: 3}
-      Name: AR-15
+      itemIcon: {fileID: 21300032, guid: 0bd96f6f4899f644ea1ffd9b4735a5e6, type: 3}
+      Name: AT4
       Value: 500
       damages:
-      - damageType: 8
-        damage: 5
+      - damageType: 10
+        damage: 50
         duration: 0
-      posOffset: {x: 0.111, y: -0.051, z: 0.009}
-      rotOffset: {x: -78.825, y: 163.921, z: 15.789}
+      posOffset: {x: 0.107, y: -0.016, z: -0.036}
+      rotOffset: {x: -82.494, y: -22.451, z: 205.097}
       owner: {fileID: 0}
       weaponType: 2
-      extraAmmo: 500
-      fireInterval: 0.25
-      maxRange: 61.27
-      chamberable: 1
-      magCapacity: 32
-      roundsRemaining: 32
-      reloadTime: 2.25
+      extraAmmo: 20
+      fireInterval: 0.2
+      maxRange: 100
+      chamberable: 0
+      magCapacity: 1
+      roundsRemaining: 0
+      reloadTime: 1.25
       heatMethod: 0
       recoilPattern:
       - {x: 0, y: 0}
-      heatCooldown: 1
-      heatCooldownRate: 1
-      firedSound: {fileID: 8300000, guid: 8c6f527ef1a819749afb6c343cb44893, type: 3}
+      heatCooldown: 0
+      heatCooldownRate: 0
+      firedSound: {fileID: 8300000, guid: 75f8e14a4e177484a92f318e46c9fa34, type: 3}
       missFiredSound: {fileID: 8300000, guid: 0792a31318eacbb4ba5e2b3fc474e9fd, type: 3}
       reloadedSound: {fileID: 8300000, guid: 61a27392c9f08b64cb272c8c2043e9e8, type: 3}
       muzzle_flash_time: 0
       usePrefabForFireable: 0
-  semiAutoRecipes: []
   burstRecipes: []
   chargeRecipes: []
   recipePrefab: {fileID: 4096230998554451061, guid: d119dc2077dfcfa4a85eaea88d09dec9, type: 3}

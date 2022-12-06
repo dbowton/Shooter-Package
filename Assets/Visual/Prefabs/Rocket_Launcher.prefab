@@ -12,19 +12,19 @@ GameObject:
   - component: {fileID: 4078921450951174487}
   - component: {fileID: 4078921450952272791}
   - component: {fileID: 8897305167935860276}
-  - component: {fileID: 8705798847963532457}
   - component: {fileID: 8705798847963532456}
   - component: {fileID: 477551324}
   - component: {fileID: 477551325}
   - component: {fileID: 477551330}
   - component: {fileID: 477551331}
+  - component: {fileID: 6971622451987083885}
   m_Layer: 0
   m_Name: Rocket_Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4078921450950371703
 Transform:
   m_ObjectHideFlags: 0
@@ -106,52 +106,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: c3e0f131222d76f4687b1ae365d3f374, type: 3}
---- !u!114 &8705798847963532457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4078921450950079831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06868b038ee5121428e82d3d9e238d86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weight: 26
-  value: 456
-  name: AT4?
-  damages:
-  - damageType: 10
-    damage: 20
-    duration: 0
-  posOffset: {x: 0.107, y: -0.016, z: -0.036}
-  rotOffset: {x: -82.494, y: -22.451, z: 205.097}
-  owner: {fileID: 0}
-  weaponType: 2
-  extraAmmo: 4687
-  fireInterval: 0.2
-  maxRange: 100
-  chamberable: 0
-  magCapacity: 1
-  roundsRemaining: 0
-  reloadTime: 1
-  heatMethod: 0
-  recoilPattern:
-  - {x: 0, y: 0}
-  heatCooldown: 0
-  heatCooldownRate: 0
-  bulletLogic: {fileID: 8705798847963532456}
-  firedSound: {fileID: 477551324}
-  missFiredSound: {fileID: 477551330}
-  reloadedSound: {fileID: 477551331}
-  useCameraPort: 0
-  viewPort: {fileID: 7842508419974535778}
-  gunPort: {fileID: 7842508419974535778}
-  gunBase: {fileID: 0}
-  muzzle_flash: {fileID: 0}
-  muzzle_flash_time: 0.75
-  usePrefabForFireable: 0
 --- !u!114 &8705798847963532456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,10 +120,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useVisualHit: 0
   projectilePrefab: {fileID: 7509838243282930644, guid: 57e1d770b86ebce40b18af1d7bbc9991, type: 3}
-  hitSound: {fileID: 477551325}
+  hitSound: {fileID: 8300000, guid: c0be08f81ee73164abd6f4dad1d15047, type: 3}
   speed: 75
   projectileTime: 12
-  hitPrefab: {fileID: 4888302071918586025, guid: ba0ed5be0912e1d4b842f63e6773ee22, type: 3}
+  hitPrefab: {fileID: 100000, guid: 15ca5b8fa431dc04291a79cadcd19874, type: 3}
   hitTime: 2
   isAOE: 1
   hitRange: 0.25
@@ -559,6 +513,24 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6971622451987083885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4078921450950079831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23d1b666f158b754783ba59a2c6e3069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FireableObject: {fileID: 7509838243282930644, guid: 57e1d770b86ebce40b18af1d7bbc9991, type: 3}
+  muzzle_flash: {fileID: 0}
+  UseCameraView: 0
+  viewPort: {fileID: 7842508419974535778}
+  gunPort: {fileID: 7842508419974535778}
+  gunLogic: {fileID: 8705798847963532456}
 --- !u!1 &4438677817536111113
 GameObject:
   m_ObjectHideFlags: 0
