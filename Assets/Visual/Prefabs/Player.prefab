@@ -721,7 +721,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  fullAutoGuns: []
+  fullAutoGuns:
+  - itemPrefab: {fileID: 8518512363889389045, guid: ea619151c5d2250438ed6ee9bbbadfed, type: 3}
+    spawnedObject: {fileID: 0}
+    itemIcon: {fileID: 21300002, guid: 71a7f8669de848e45ba57bda95f3a58e, type: 3}
+    Name: AR15
+    Value: 50
+    damages:
+    - damageType: 8
+      damage: 15
+      duration: 0
+    posOffset: {x: 0.111, y: -0.051, z: 0.009}
+    rotOffset: {x: -78.825, y: 163.921, z: 15.789}
+    owner: {fileID: 0}
+    weaponType: 2
+    extraAmmo: 218
+    fireInterval: 0.25
+    maxRange: 500
+    chamberable: 1
+    magCapacity: 32
+    roundsRemaining: 14
+    reloadTime: 1.825
+    heatMethod: 0
+    recoilPattern:
+    - {x: 0, y: 0}
+    heatCooldown: 0
+    heatCooldownRate: 0
+    firedSound: {fileID: 8300000, guid: 8c6f527ef1a819749afb6c343cb44893, type: 3}
+    missFiredSound: {fileID: 8300000, guid: 0792a31318eacbb4ba5e2b3fc474e9fd, type: 3}
+    reloadedSound: {fileID: 8300000, guid: 61a27392c9f08b64cb272c8c2043e9e8, type: 3}
+    muzzle_flash_time: 0
+    usePrefabForFireable: 0
   miscItems: []
   money: 200
   weaponIndex: 0

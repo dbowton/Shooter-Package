@@ -407,6 +407,9 @@ public class PlayerManager : Character
     public override void Die()
     {
         base.Die();
+
+
+
         print("Ha Loser");
     }
 
